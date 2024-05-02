@@ -10,6 +10,7 @@ class SignUpState extends Equatable {
   final TextEditingController passWordController;
   final TextEditingController confirmPassWordController;
   final String matchPasswordMessage;
+  final GlobalKey<FormState> globalKey;
 
 
   const SignUpState({
@@ -20,6 +21,7 @@ class SignUpState extends Equatable {
     required this.passWordController,
     required this.confirmPassWordController,
     this.matchPasswordMessage = "",
+    required this.globalKey
   });
 
 
@@ -31,7 +33,8 @@ class SignUpState extends Equatable {
         emailController,
         passWordController,
         confirmPassWordController,
-        matchPasswordMessage
+        matchPasswordMessage,
+        globalKey
       ];
 
 
@@ -43,9 +46,11 @@ class SignUpState extends Equatable {
     TextEditingController? passWordController,
     TextEditingController? confirmPassWordController,
     bool? isPasswordMatch,
-    String? matchPasswordMessage
+    String? matchPasswordMessage,
+    GlobalKey<FormState>? globalKey
   }) {
     return SignUpState(
+        globalKey: globalKey ?? this.globalKey,
         password: password ?? this.password,
         confirmPassword: confirmPassword ?? this.confirmPassword,
         nameController: nameController ?? this.nameController,

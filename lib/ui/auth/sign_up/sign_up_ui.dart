@@ -21,6 +21,7 @@ class SignUpUi extends StatefulWidget {
   static const String routeName = '/sign_up_ui';
   static Widget builder(BuildContext context) => BlocProvider(
     create: (context) => SignUpCubit(SignUpState(
+      globalKey: GlobalKey<FormState>(),
       nameController: TextEditingController(),
       emailController: TextEditingController(),
       passWordController: TextEditingController(),
@@ -36,7 +37,7 @@ class SignUpUi extends StatefulWidget {
 class _SignUpUiState extends State<SignUpUi> {
 
   SignUpCubit get signUpCubit => context.read<SignUpCubit>();
-  final GlobalKey<FormState> _formState = GlobalKey();
+  // final GlobalKey<FormState> _formState = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +97,7 @@ class _SignUpUiState extends State<SignUpUi> {
                   child: BlocBuilder<SignUpCubit, SignUpState>(
                   builder: (context, state) {
                     return Form(
-                      key: _formState,
+                      key: state.globalKey,
                       child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -175,7 +176,7 @@ class _SignUpUiState extends State<SignUpUi> {
                                           : Colors.red,
                             );
                             },
-                          ),
+                           ),
                           ),
                         ),
 
@@ -187,7 +188,7 @@ class _SignUpUiState extends State<SignUpUi> {
                             text: "Continue",
                             borderRadius: Spacing.medium,
                             onPressed: (){
-                              if(_formState.currentState!.validate()){
+                              if(state.globalKey.currentState!.validate()){
                                  CloudFireStoreServices.instance.signUp(signUpModel: SignUpModel(
                                    userName: state.nameController.text.trim(),
                                    userEmail: state.emailController.text.trim(),

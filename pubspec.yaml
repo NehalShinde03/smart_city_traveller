@@ -48,6 +48,8 @@ dependencies:
   google_maps_flutter: ^2.2.8
   permission_handler: ^11.3.1
   lottie: ^3.1.0
+  geolocator: any
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

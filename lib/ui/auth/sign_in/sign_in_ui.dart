@@ -21,11 +21,11 @@ class SignInUi extends StatefulWidget {
   static const String routeName = '/sign_in_ui';
   static Widget builder(BuildContext context) => BlocProvider(
     create: (context) => SignInCubit(SignInState(
-        emailController: TextEditingController(),
-        passWordController: TextEditingController(),
+        emailController: TextEditingController(text: 'n@gmail.com'),
+        passWordController: TextEditingController(text: '123'),
         firebaseAuth: FirebaseAuth.instance,
         globalKey: GlobalKey<FormState>()
-    ),
+      ),
     ),
     child: const SignInUi(),
   );

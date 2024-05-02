@@ -26,9 +26,10 @@ class CloudFireStoreServices{
                  Filter('userPassWord', isEqualTo: password),
                ),
             ).get().then((value){
+              print("get email ====>");
               for (var element in value.docs) {
                 name = element.get('userName');
-                print("enter");
+                print("enter ====> $name");
                 print("service name ===> ${element.get('userName')}");
               }
               return name;

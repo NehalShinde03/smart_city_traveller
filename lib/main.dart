@@ -7,6 +7,7 @@ import 'package:smart_city_traveller/ui/go/go_ui.dart';
 import 'package:smart_city_traveller/ui/home/home_ui.dart';
 import 'package:smart_city_traveller/ui/on_bording_screen/on_boarding_ui.dart';
 import 'package:smart_city_traveller/ui/profile/profile_ui.dart';
+import 'package:smart_city_traveller/ui/search/search_ui.dart';
 import 'package:smart_city_traveller/ui/splash/splash_ui.dart';
 import 'package:smart_city_traveller/ui/time_slot/time_slot_ui.dart';
 import 'firebase_options.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
     SignInUi.routeName:SignInUi.builder,
     SignUpUi.routeName:SignUpUi.builder,
     HomeUi.routeName:HomeUi.builder,
+    SearchUi.routeName:SearchUi.builder,
     OnBoardingUi.routeName:OnBoardingUi.builder,
     BottomNavBarView.routeName:BottomNavBarView.builder,
     GoUi.routeName:GoUi.builder,

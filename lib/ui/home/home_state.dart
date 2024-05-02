@@ -11,14 +11,17 @@ class HomeState extends Equatable {
   final TextEditingController searchController;
   final bool isDirectionIconClick;
   final Completer<GoogleMapController> googleMapController;
+  final String address;
+  final LatLng latLag;
 
   const HomeState({
     this.userInfo = const [],
     this.drawerItemIcon = const [Icons.home, Icons.settings, Icons.contact_emergency,],
     required this.searchController,
-    // required this.permissionStatus,
     this.isDirectionIconClick = false,
-    required this.googleMapController
+    required this.googleMapController,
+    this.address = "",
+    required this.latLag
   });
 
   @override
@@ -26,9 +29,10 @@ class HomeState extends Equatable {
         userInfo,
         drawerItemIcon,
         searchController,
-       //  permissionStatus,
-       isDirectionIconClick,
-       googleMapController
+        isDirectionIconClick,
+        googleMapController,
+        address,
+        latLag
       ];
 
   HomeState copyWith({
@@ -37,15 +41,18 @@ class HomeState extends Equatable {
     TextEditingController? searchController,
     Future<PermissionStatus>? permissionStatus,
     bool? isDirectionIconClick,
-    Completer<GoogleMapController>? googleMapController
+    Completer<GoogleMapController>? googleMapController,
+    String? address,
+    LatLng? latLag,
   }) {
     return HomeState(
       userInfo: userInfo ?? this.userInfo,
       drawerItemIcon: drawerItemIcon ?? this.drawerItemIcon,
       searchController: searchController ?? this.searchController,
-      // permissionStatus: permissionStatus ?? this.permissionStatus,
-        isDirectionIconClick: isDirectionIconClick ?? this.isDirectionIconClick,
-      googleMapController: googleMapController ?? this.googleMapController
+      isDirectionIconClick: isDirectionIconClick ?? this.isDirectionIconClick,
+      googleMapController: googleMapController ?? this.googleMapController,
+      address: address ?? this.address,
+      latLag: latLag ?? this.latLag
     );
   }
 }

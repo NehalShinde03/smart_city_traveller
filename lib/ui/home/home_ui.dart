@@ -1,12 +1,15 @@
 import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/common/common_spacing.dart';
-import 'package:smart_city_traveller/common/widget/common_textfield.dart';
 import 'package:smart_city_traveller/ui/home/home_cubit.dart';
 import 'package:smart_city_traveller/ui/home/home_state.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:smart_city_traveller/ui/search/search_ui.dart';
 
 class HomeUi extends StatefulWidget {
   const HomeUi({super.key});
@@ -19,6 +22,7 @@ class HomeUi extends StatefulWidget {
             HomeCubit(HomeState(
                 searchController: TextEditingController(),
                 googleMapController: Completer<GoogleMapController>(),
+                latLag: const LatLng(0.0, 0.0)
             )),
         child: const HomeUi(),
       );
@@ -30,6 +34,12 @@ class HomeUi extends StatefulWidget {
 class _HomeUiState extends State<HomeUi> {
 
   HomeCubit get homeCubit => context.read<HomeCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    homeCubit.fetchCurrentLocation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,34 +151,31 @@ class _HomeUiState extends State<HomeUi> {
             ),
           ),*/
 
-          Flexible(
-              child: GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(21.071425, 72.878488),
-                  zoom: 13.0,
-                ),
-                onMapCreated: (GoogleMapController controller) {
-                  state.googleMapController.complete(controller);
-                },
-                // buildingsEnabled: true,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-                compassEnabled: true,
-                markers: {
-                  const Marker(
-                      markerId: MarkerId('111'),
-                      icon: BitmapDescriptor.defaultMarker,
-                      position: LatLng(21.071425, 72.878488)
-                  )
-                },
-                padding: const EdgeInsets.only(
-                  top: Spacing.xxxLarge * 15.2
-                ),
-                zoomControlsEnabled: false,
-                // mapType: MapType.normal,
-                // trafficEnabled: true,
-                // mapToolbarEnabled: true,
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: state.latLag,
+              zoom: 7.0,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              state.googleMapController.complete(controller);
+            },
+            buildingsEnabled: true,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            markers: {
+              Marker(
+                  markerId: const MarkerId('1'),
+                  icon: BitmapDescriptor.defaultMarker,
+                  position: state.latLag,
+                  infoWindow: InfoWindow(
+                    title: state.address,
+                  ),
               )
+            },
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            mapToolbarEnabled: false,
           ),
 
         /* state.isDirectionIconClick
@@ -217,25 +224,40 @@ class _HomeUiState extends State<HomeUi> {
             alignment: Alignment.bottomRight,
             child: Padding(
               padding: const EdgeInsetsDirectional.only(
-                bottom: Spacing.small,
-                end: Spacing.small,
+                  end: Spacing.medium,
+                  bottom: Spacing.medium,
               ),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width/7.5,
-                height: MediaQuery.of(context).size.height/15,
-                child: FloatingActionButton(
-                  onPressed: () => homeCubit.isDirectionIconClick(isDirectionIconClick: !state.isDirectionIconClick),
-                  backgroundColor: CommonColor.darkBlue,
-                  child: const Icon(Icons.directions_sharp, color: CommonColor.white, size: Spacing.xxxLarge,),
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  GestureDetector(
+                    onTap: () => homeCubit.fetchCurrentLocation(),
+                    child: const CircleAvatar(
+                      radius: Spacing.xxLarge,
+                      backgroundColor: CommonColor.white,
+                      child: Icon(
+                        Icons.my_location,
+                        color: CommonColor.darkBlue,
+                      ),
+                    ),
+                  ),
+
+                  const Gap(Spacing.medium),
+
+                  FloatingActionButton(
+                    onPressed: () => Navigator.pushNamed(context, SearchUi.routeName, arguments: state.address),
+                    backgroundColor: CommonColor.darkBlue,
+                    child: const Icon(Icons.directions_sharp, color: CommonColor.white, size: Spacing.xxxLarge,),
+                  ),
+                ],
               ),
             ),
           )
-
         ],
       );
-  },
-),
+      },
+    ),
     );
   }
 }
