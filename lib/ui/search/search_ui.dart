@@ -63,7 +63,7 @@ class _SearchUiState extends State<SearchUi> {
                   fontWeight: FontWeight.bold,
                   fontSize: Spacing.large,
                 ),
-                const Gap(Spacing.medium),
+
 
                 Stepper(
                   margin: const EdgeInsetsDirectional.only(
@@ -84,6 +84,7 @@ class _SearchUiState extends State<SearchUi> {
                       title: const Icon(Icons.share_location),
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           const CommonText(
                             text: "From",
@@ -101,9 +102,10 @@ class _SearchUiState extends State<SearchUi> {
                       ),
                     ),
                     Step(
-                      title: const Icon(Icons.share_location),
+                      title: const Icon(Icons.location_on_sharp),
                       content: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           const CommonText(
                             text: "To",
@@ -113,7 +115,7 @@ class _SearchUiState extends State<SearchUi> {
                           CommonTextField(
                             controller: state.destinationAddressController, // Use a different controller
                             hintText: "Destination Address",
-                            prefixIcon: Icons.my_location_rounded,
+                            prefixIcon: Icons.location_on_sharp,
                             suffixIcon: Icons.cancel,
                             suffixIconOnTap: () => state.destinationAddressController.clear(),
                           ),
