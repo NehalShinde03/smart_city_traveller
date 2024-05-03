@@ -101,6 +101,7 @@ class _SearchUiState extends State<SearchUi> {
                         ],
                       ),
                     ),
+
                     Step(
                       title: const Icon(Icons.location_on_sharp),
                       content: Column(
