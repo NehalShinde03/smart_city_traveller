@@ -19,7 +19,7 @@ class SignInState extends Equatable {
       this.userName = "",
       this.firebaseAuth,
       this.isLogin = false,
-      required this.globalKey
+      required this.globalKey,
       });
 
   @override

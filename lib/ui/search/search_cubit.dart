@@ -10,4 +10,13 @@ class SearchCubit extends Cubit<SearchState>{
       emit(state.copyWith(sourceAddressController: state.sourceAddressController));
   }
 
+  void generateSessionKey({required String sessionKey}){
+    emit(state.copyWith(sessionToken: sessionKey));
+  }
+
 }
+
+
+
+///place api :: AIzaSyCXb3JSLUgurnIUOgtB599ncur-Mvja5a4
+///https://console.cloud.google.com/welcome/new?project=big-station-421712

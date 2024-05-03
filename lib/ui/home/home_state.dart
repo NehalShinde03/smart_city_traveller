@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,18 +6,18 @@ import 'package:permission_handler/permission_handler.dart';
 
 class HomeState extends Equatable {
   final List<String> userInfo;
-  final List<IconData> drawerItemIcon;
+  // final List<IconData> drawerItemIcon;
   final TextEditingController searchController;
-  final bool isDirectionIconClick;
+  // final bool isDirectionIconClick;
   final Completer<GoogleMapController> googleMapController;
   final String address;
   final LatLng latLag;
 
   const HomeState({
     this.userInfo = const [],
-    this.drawerItemIcon = const [Icons.home, Icons.settings, Icons.contact_emergency,],
+    // this.drawerItemIcon = const [Icons.home, Icons.settings, Icons.contact_emergency,],
     required this.searchController,
-    this.isDirectionIconClick = false,
+    // this.isDirectionIconClick = false,
     required this.googleMapController,
     this.address = "",
     required this.latLag
@@ -27,9 +26,9 @@ class HomeState extends Equatable {
   @override
   List<Object?> get props => [
         userInfo,
-        drawerItemIcon,
+        // drawerItemIcon,
         searchController,
-        isDirectionIconClick,
+        // isDirectionIconClick,
         googleMapController,
         address,
         latLag
@@ -37,19 +36,19 @@ class HomeState extends Equatable {
 
   HomeState copyWith({
     List<String>? userInfo,
-    List<IconData>? drawerItemIcon,
+    // List<IconData>? drawerItemIcon,
     TextEditingController? searchController,
     Future<PermissionStatus>? permissionStatus,
-    bool? isDirectionIconClick,
+    // bool? isDirectionIconClick,
     Completer<GoogleMapController>? googleMapController,
     String? address,
     LatLng? latLag,
   }) {
     return HomeState(
       userInfo: userInfo ?? this.userInfo,
-      drawerItemIcon: drawerItemIcon ?? this.drawerItemIcon,
+      // drawerItemIcon: drawerItemIcon ?? this.drawerItemIcon,
       searchController: searchController ?? this.searchController,
-      isDirectionIconClick: isDirectionIconClick ?? this.isDirectionIconClick,
+      // isDirectionIconClick: isDirectionIconClick ?? this.isDirectionIconClick,
       googleMapController: googleMapController ?? this.googleMapController,
       address: address ?? this.address,
       latLag: latLag ?? this.latLag

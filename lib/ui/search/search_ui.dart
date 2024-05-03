@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -40,8 +40,30 @@ class _SearchUiState extends State<SearchUi> {
   @override
   void initState() {
     super.initState();
-    // searchCubit.setSourceAddress();
+    searchCubit.state.destinationAddressController.addListener(() {
+      if(searchCubit.state.sessionToken.isEmpty){
+        searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());
+      }
+      getSuggestion(searchCubit.state.destinationAddressController.text);
+    });
   }
+
+  void getSuggestion(String searchLocation) async{
+
+    String kPLACE_API_KEY = "AIzaSyA4iH7CZNifxrsHqsrLpIZ5UXZCe3RxsRg";
+    String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${searchCubit.state.sessionToken}";
+    print("enable===> ");
+    final response = await Dio().get(request);
+    if(response.statusCode == 200){
+        print("resp data =====> ${response.data}");
+    }else{
+      print("something wrong");
+    }
+
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +79,6 @@ class _SearchUiState extends State<SearchUi> {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisSize: MainAxisSize.max,
                 children: [
 
                   /// where would you like go?
@@ -142,11 +163,12 @@ class LinearPainter extends CustomPainter{
     Offset(size.height/12, size.height/1),
     paint
   );
-
-  }
+}
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
-  }
+}
+
+/// proglabs official

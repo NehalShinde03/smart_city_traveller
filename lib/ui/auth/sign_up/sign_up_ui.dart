@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +36,6 @@ class SignUpUi extends StatefulWidget {
 class _SignUpUiState extends State<SignUpUi> {
 
   SignUpCubit get signUpCubit => context.read<SignUpCubit>();
-  // final GlobalKey<FormState> _formState = GlobalKey();
 
   @override
   Widget build(BuildContext context) {

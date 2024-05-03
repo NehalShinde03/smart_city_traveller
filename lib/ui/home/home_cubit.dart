@@ -15,9 +15,9 @@ class HomeCubit extends Cubit<HomeState>{
     print("cubit exe");
   }
 
-  void isDirectionIconClick({required bool isDirectionIconClick}){
+/*  void isDirectionIconClick({required bool isDirectionIconClick}){
     emit(state.copyWith(isDirectionIconClick: isDirectionIconClick));
-  }
+  }*/
 
 
   void fetchCurrentLocation() async{
@@ -29,7 +29,7 @@ class HomeCubit extends Cubit<HomeState>{
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
             target: LatLng(position.latitude, position.longitude),
-            zoom: 17.0,
+            zoom: 15.0,
             bearing: 0.0
         ),
     ));
@@ -38,8 +38,10 @@ class HomeCubit extends Cubit<HomeState>{
     Placemark placemark = placeMarks[0];
     String address = "${placemark.street}, ${placemark.name}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.postalCode}, ${placemark.country}";
     emit(state.copyWith(address: address));
-    print("addreess ====> $address");
+
+    print("addreess ====> ${placeMarks}");
   }
 
+// 204, 204, surat, gujarat, 395008, india
 
 }
