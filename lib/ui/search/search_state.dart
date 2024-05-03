@@ -8,7 +8,7 @@ class SearchState extends Equatable {
   final String address;
   final Uuid uuid;
   final String sessionToken;
-  final List<String> placeList;
+  final List placeList;
   // final LatLng latLng;
 
   const SearchState({
@@ -16,7 +16,7 @@ class SearchState extends Equatable {
     required this.destinationAddressController,
     this.address = "",
     this.uuid = const Uuid(),
-    this.sessionToken = "122344",
+    this.sessionToken = "056a8f46-88b8-4a93-ae1b-1b7b391b2733",
     this.placeList = const []
     // required this.latLng
   });
@@ -37,7 +37,7 @@ class SearchState extends Equatable {
     String? address,
     Uuid? uuid,
     String? sessionToken,
-    List<String>? placeList
+    List? placeList
     /*LatLng? latLng*/
   }) {
     return SearchState(

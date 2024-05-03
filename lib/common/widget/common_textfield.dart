@@ -9,7 +9,7 @@ class CommonTextField extends StatelessWidget {
   final bool? obscureText;
   final TextEditingController controller;
   final FormFieldValidator<String>? validator;
-  final ValueChanged? onChanged;
+  final ValueChanged<String>? onChanged;
   final int? maxLine;
   final String? hintText;
   // final String? prefixImagePath;

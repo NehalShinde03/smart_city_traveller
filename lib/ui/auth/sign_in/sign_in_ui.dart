@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -163,6 +164,7 @@ class _SignInUiState extends State<SignInUi> {
                         const CommonText(
                           text: "⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻  or continue with  ⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻⎻",
                           textColor: CommonColor.grey,
+                          fontSize: Spacing.medium,
                         ),
 
                         const Gap(Spacing.xLarge),
@@ -183,9 +185,11 @@ class _SignInUiState extends State<SignInUi> {
             ),
           ),
 
-          Positioned(
-            top: Spacing.xxLarge*2,
-            left: Spacing.xxxLarge*4.3,
+          Padding(
+            padding: const EdgeInsetsDirectional.only(
+              top: Spacing.xxLarge*2,
+              start: Spacing.xxxLarge*4.3,
+            ),
             child: Image.asset(
               CommonPng.signIn,
               scale: Spacing.xSmall-2.5,
@@ -200,9 +204,11 @@ class _SignInUiState extends State<SignInUi> {
                     color: CommonColor.black.withOpacity(0.6),
                     child: Center(
                       child: Lottie.asset(
-                          'assets/animation/loading.json',
-                          width: Spacing.xxxLarge + Spacing.xLarge,
-                          height: Spacing.xxxLarge + Spacing.xLarge
+                          'assets/animation/loader.json',
+                          width: MediaQuery.of(context).size.width/3,
+                          height: MediaQuery.of(context).size.height/3,
+                          fit: BoxFit.fill,
+                          // frameRate: FrameRate.composition,
                       ),
                     ),
                   );

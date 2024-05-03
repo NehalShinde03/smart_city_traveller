@@ -36,12 +36,12 @@ class _HomeUiState extends State<HomeUi> {
   @override
   void initState() {
     super.initState();
-    homeCubit.fetchCurrentLocation();
+    // homeCubit.fetchCurrentLocation();
   }
 
   @override
   Widget build(BuildContext context) {
-
+    homeCubit.fetchCurrentLocation();
      return Scaffold(
       /*drawer: Drawer(
         backgroundColor: CommonColor.black.withOpacity(0.8),
