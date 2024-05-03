@@ -21,15 +21,15 @@ class SignInCubit extends Cubit<SignInState>{
   /// match login data with  register user
   void credentialMatchLoginTime({context}) async{
     emit(state.copyWith(isLogin: true));
-   /* if(state.emailController.text.isNotEmpty && state.passWordController.text.isNotEmpty){
+    if(state.emailController.text.isNotEmpty && state.passWordController.text.isNotEmpty){
       String userName = await CloudFireStoreServices.instance.compareCredential(
         email: state.emailController.text.trim(), password: state.passWordController.text.trim(),
       );
       print("name ===> $userName");
       emit(state.copyWith(userName: userName));
-    }*/
+    }
 
-    emit(state.copyWith(userName: 'nehal')); // add this line extra
+    // emit(state.copyWith(userName: 'nehal')); // add this line extra
     if(state.globalKey.currentState!.validate() && state.userName!=""){
       storeUserNameNEmail(email: state.emailController.text);
       emit(state.copyWith(userName: state.userName, isLogin: false));

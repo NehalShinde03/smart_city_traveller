@@ -29,7 +29,7 @@ class HomeCubit extends Cubit<HomeState>{
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
             target: LatLng(position.latitude, position.longitude),
-            zoom: 15.0,
+            zoom: 17.0,
             bearing: 0.0
         ),
     ));

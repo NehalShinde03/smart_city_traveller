@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/common/common_spacing.dart';
 import 'package:smart_city_traveller/common/widget/common_text.dart';
 import 'package:smart_city_traveller/common/widget/common_textfield.dart';
@@ -43,117 +45,108 @@ class _SearchUiState extends State<SearchUi> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<SearchCubit, SearchState>(
-        builder: (context, state) {
-          searchCubit.setSourceAddress();
-          return Padding(
-            padding: const EdgeInsetsDirectional.only(
-                start: Spacing.medium,
-                end: Spacing.medium,
-                top: Spacing.large,
-                // bottom: Spacing.small
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisSize: MainAxisSize.max,
-              children: [
-                const CommonText(
-                  text: "Where would you like go?",
-                  fontWeight: FontWeight.bold,
-                  fontSize: Spacing.large,
-                ),
+    return SafeArea(
+      child: Scaffold(
+        body: BlocBuilder<SearchCubit, SearchState>(
+          builder: (context, state) {
+            searchCubit.setSourceAddress();
+            return Padding(
+              padding: const EdgeInsetsDirectional.only(
+                  start: Spacing.medium,
+                  end: Spacing.medium,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisSize: MainAxisSize.max,
+                children: [
 
-
-                Stepper(
-                  margin: const EdgeInsetsDirectional.only(
-                    start: Spacing.xxxLarge + Spacing.small,
-                    end: Spacing.medium,
+                  /// where would you like go?
+                  const CommonText(
+                    text: "Where would you like go?",
+                    fontWeight: FontWeight.bold,
+                    fontSize: Spacing.large,
                   ),
-                  controlsBuilder: (context, controller) {
-                    return const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox.shrink(),
-                        SizedBox.shrink(),
-                      ],
-                    );
-                  },
-                  steps: [
-                    Step(
-                      title: const Icon(Icons.share_location),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
+                  const Gap(Spacing.medium),
+                  /// source address and destination address
+                  Row(
+                    children: [
+
+                      Column(
                         children: [
-                          const CommonText(
-                            text: "From",
-                            fontWeight: FontWeight.bold,
-                            fontSize: Spacing.large,
+                          const Icon(Icons.my_location, color: CommonColor.darkBlue,),
+                          CustomPaint(
+                            size: const Size(10,60),
+                            painter: LinearPainter(),
                           ),
-                          CommonTextField(
-                            controller: state.sourceAddressController,
-                            hintText: "Source Address",
-                            prefixIcon: Icons.my_location_rounded,
-                            suffixIcon: Icons.cancel,
-                            suffixIconOnTap: () => state.sourceAddressController.clear(),
-                          ),
+                          const Icon(Icons.location_on, color: CommonColor.darkBlue,),
                         ],
                       ),
+
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(start: Spacing.xSmall),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width/1.2,
+                              child: CommonTextField(
+                                controller: state.sourceAddressController,
+                                hintText: "Source Address",
+                                suffixIcon: Icons.cancel,
+                                suffixIconOnTap: () => state.sourceAddressController.clear(),
+                              ),
+                            ),
+                            const Gap(Spacing.medium + Spacing.small),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width/1.2,
+                                child: CommonTextField(
+                                  controller: state.destinationAddressController,
+                                  hintText: "Destination Address",
+                                  suffixIcon: Icons.cancel,
+                                  suffixIconOnTap: () => state.destinationAddressController.clear(),
+                                )
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+
+                  ///filter result by search
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsetsDirectional.only(top: Spacing.medium),
+                      color: CommonColor.red,
                     ),
+                  )
 
-                    Step(
-                      title: const Icon(Icons.location_on_sharp),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const CommonText(
-                            text: "To",
-                            fontWeight: FontWeight.bold,
-                            fontSize: Spacing.large,
-                          ),
-                          CommonTextField(
-                            controller: state.destinationAddressController, // Use a different controller
-                            hintText: "Destination Address",
-                            prefixIcon: Icons.location_on_sharp,
-                            suffixIcon: Icons.cancel,
-                            suffixIconOnTap: () => state.destinationAddressController.clear(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
 
-                /*CommonTextField(
-                  controller: state.sourceAddressController,
-                  hintText: "Destination Address",
-                  prefixIcon: Icons.my_location_rounded,
-                  suffixIcon: Icons.cancel,
-                  suffixIconOnTap: () => state.sourceAddressController.clear(),
-                ),*/
-              /*  const Gap(Spacing.xxLarge),*/
-
-                SizedBox()
-
-                /*const Gap(Spacing.xMedium),
-                CommonTextField(
-                  controller: state.destinationAddressController,
-                  hintText: "Destination Address",
-                  prefixIcon: Icons.share_location_sharp,
-                  suffixIcon: Icons.cancel,
-                  suffixIconOnTap: () => state.destinationAddressController.clear(),
-                ),*/
-
-                /*Expanded(
-                    child: Container(color: Colors.red,),
-                )*/
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+class LinearPainter extends CustomPainter{
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+        ..color = CommonColor.grey
+        ..strokeWidth = 2;
+
+  canvas.drawLine(
+    Offset(size.height/12, size.height/14),
+    Offset(size.height/12, size.height/1),
+    paint
+  );
+
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+  }

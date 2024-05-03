@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDlxButPQcIMa4SqhoxdUrGi98t1_gCf7k',
-    appId: '1:812293069262:android:bd8b3f46001c6fd7e0f39f',
+    appId: '1:812293069262:android:ee27413f33891d08e0f39f',
     messagingSenderId: '812293069262',
     projectId: 'auth-8b2ab',
     storageBucket: 'auth-8b2ab.appspot.com',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyATnL_b3Yvf9akHodmo_EXlFWfDYjN-bVY',
-    appId: '1:812293069262:ios:67627cfdc59943b9e0f39f',
+    appId: '1:812293069262:ios:af7538d457480589e0f39f',
     messagingSenderId: '812293069262',
     projectId: 'auth-8b2ab',
     storageBucket: 'auth-8b2ab.appspot.com',
-    androidClientId: '812293069262-g4a2kt1r07if6fvbnim6k99taah8ufdv.apps.googleusercontent.com',
+    androidClientId: '812293069262-a0hla77eao8vmshk627k50dij2mi3qna.apps.googleusercontent.com',
     iosClientId: '812293069262-d69ggcfeq4pkj0d3r53ofhuq8494knbh.apps.googleusercontent.com',
     iosBundleId: 'com.example.smartCityTraveller',
   );
