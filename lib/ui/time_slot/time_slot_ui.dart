@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_city_traveller/common/common_colors.dart';
+import 'package:smart_city_traveller/common/widget/common_textfield.dart';
 import 'package:smart_city_traveller/ui/time_slot/time_slot_cubit.dart';
 import 'package:smart_city_traveller/ui/time_slot/time_slot_state.dart';
 
@@ -19,6 +21,31 @@ class TimeSlotUi extends StatefulWidget {
 class _TimeSlotUiState extends State<TimeSlotUi> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+
+    final TextEditingController sourceAddressController = TextEditingController();
+    final TextEditingController destinationAddressController = TextEditingController();
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+
+            CommonTextField(
+              controller: sourceAddressController,
+              hintText: "From",
+              suffixIcon: sourceAddressController.text.isNotEmpty
+                ? Icon(Icons.cancel, color: CommonColor.black.withOpacity(0.4),)
+                : Icon(Icons.add, color: CommonColor.black.withOpacity(0.4),),
+              suffixIconOnTap: () {
+              },
+              onChanged: (val){
+              },
+            )
+
+
+          ],
+        ),
+      ),
+    );
   }
 }

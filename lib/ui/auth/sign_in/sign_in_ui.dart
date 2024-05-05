@@ -117,8 +117,19 @@ class _SignInUiState extends State<SignInUi> {
                           cursorColor: CommonColor.black,
                           hintText: "Password",
                           obscureText: !(state.password),
-                          suffixIcon: state.password ? Icons.visibility_off : Icons.visibility,
-                          suffixIconOnTap: () => signInCubit.password(password: !state.password),
+                          suffixIcon: GestureDetector(
+                            onTap: (){
+                              signInCubit.password(password: !state.password);
+                            },
+                            child: state.password
+                                ? Icon(Icons.visibility_off, color: CommonColor.black.withOpacity(0.4),)
+                                : Icon(Icons.visibility, color: CommonColor.black.withOpacity(0.4),)
+                          ),
+
+                          // suffixIcon: state.password
+                          //     ? Icon(Icons.visibility_off, color: CommonColor.black.withOpacity(0.4),)
+                          //     : Icon(Icons.visibility, color: CommonColor.black.withOpacity(0.4),),
+                          // suffixIconOnTap: () => ,
                           validator: (val){
                             if(val!.isEmpty){
                               return "field is mandatory";

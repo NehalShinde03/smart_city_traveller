@@ -129,8 +129,16 @@ class _SignUpUiState extends State<SignUpUi> {
                           cursorColor: CommonColor.black,
                           hintText: "Password",
                           obscureText: !(state.password),
-                          suffixIcon: state.password ? Icons.visibility_off : Icons.visibility,
-                          suffixIconOnTap: () => signUpCubit.password(password: !state.password),
+                          suffixIcon: GestureDetector(
+                            onTap: () => signUpCubit.password(password: !state.password),
+                            child: state.password
+                                ? Icon(Icons.visibility_off, color: CommonColor.black.withOpacity(0.4),)
+                                : Icon(Icons.visibility, color: CommonColor.black.withOpacity(0.4),)
+                          ),
+                          /*suffixIcon: state.password
+                              ? Icon(Icons.visibility_off, color: CommonColor.black.withOpacity(0.4),)
+                              : Icon(Icons.visibility, color: CommonColor.black.withOpacity(0.4),),
+                          suffixIconOnTap: () => signUpCubit.password(password: !state.password),*/
                           validator: (val){
                             if(val!.isEmpty){
                               return "field is mandatory";
@@ -146,8 +154,16 @@ class _SignUpUiState extends State<SignUpUi> {
                           cursorColor: CommonColor.black,
                           hintText: "Confirm Password",
                           obscureText: !(state.confirmPassword),
-                          suffixIcon: state.confirmPassword ? Icons.visibility_off : Icons.visibility,
-                          suffixIconOnTap: () => signUpCubit.confirmPassword(confirmPassword: !state.confirmPassword),
+                          suffixIcon: GestureDetector(
+                            onTap: () => signUpCubit.confirmPassword(confirmPassword: !state.confirmPassword),
+                            child: state.confirmPassword
+                                  ? Icon(Icons.visibility_off, color: CommonColor.black.withOpacity(0.4),)
+                                  : Icon(Icons.visibility, color: CommonColor.black.withOpacity(0.4),),
+                          ),
+                          // suffixIcon: state.confirmPassword
+                          //       ? Icon(Icons.visibility_off, color: CommonColor.black.withOpacity(0.4),)
+                          //       : Icon(Icons.visibility, color: CommonColor.black.withOpacity(0.4),),
+                          // suffixIconOnTap: () => signUpCubit.confirmPassword(confirmPassword: !state.confirmPassword),
                           onChanged: (val){
                             signUpCubit.checkPasswordNConfirmPasswordMatch(confirmPassword: val);
                           },

@@ -51,6 +51,7 @@ dependencies:
   geolocator: any
   geocoding: ^3.0.0
   dio: ^5.4.3+1
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
   assets:
     - assets/images/png/
     - assets/images/jpg/
+    - assets/images/svg/
     - assets/animation/
   #   - images/a_dot_ham.jpeg
 

@@ -1,10 +1,19 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
+import 'package:smart_city_traveller/common/common_images.dart';
 import 'package:smart_city_traveller/common/common_spacing.dart';
+import 'package:smart_city_traveller/common/widget/bottom_navigation.dart';
+import 'package:smart_city_traveller/common/widget/common_elevated_button.dart';
 import 'package:smart_city_traveller/common/widget/common_text.dart';
 import 'package:smart_city_traveller/common/widget/common_textfield.dart';
+import 'package:smart_city_traveller/common/widget/enum.dart';
+import 'package:smart_city_traveller/ui/bottom_nav_bar/bottom_nav_bar_cubit.dart';
+import 'package:smart_city_traveller/ui/bottom_nav_bar/bottom_nav_bar_state.dart';
+import 'package:smart_city_traveller/ui/bottom_nav_bar/bottom_nav_bar_view.dart';
+import 'package:smart_city_traveller/ui/home/home_ui.dart';
 import 'package:smart_city_traveller/ui/search/search_cubit.dart';
 import 'package:smart_city_traveller/ui/search/search_state.dart';
 
@@ -35,38 +44,21 @@ class SearchUi extends StatefulWidget {
 class _SearchUiState extends State<SearchUi> {
 
   SearchCubit get searchCubit => context.read<SearchCubit>();
+  BottomNavBarCubit get bottomNavBar => context.read<BottomNavBarCubit>();
+  // FocusNode focusNode = FocusNode();
+  // final _debouncer = Debouncer(millisecond: 300);
 
-  // @override
-/*  void initState() {
+  @override
+  void initState() {
     super.initState();
-    searchCubit.state.destinationAddressController.addListener(() {
-      if(searchCubit.state.sessionToken.isEmpty){
-        searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());
-      }
-      // getSuggestion(searchCubit.state.destinationAddressController.text);
-      searchCubit.searchLocation(searchLocation: searchCubit.state.destinationAddressController.text);
-    });
-  }*/
-
-/*  void getSuggestion(String searchLocation) async{
-    String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow";
-    String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-    String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${searchCubit.state.sessionToken}";
-    print("enable===> ");
-    final response = await Dio().get(request);
-    if(response.statusCode == 200){
-        print("resp data =====> ${response.data}");
-    }else{
-      print("something wrong");
-    }
-  }*/
+    searchCubit.setSourceAddress();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // searchCubit.setSourceAddress();
-    return SafeArea(
-      child: Scaffold(
-        body: Padding(
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsetsDirectional.only(
             start: Spacing.medium,
             end: Spacing.medium,
@@ -82,18 +74,19 @@ class _SearchUiState extends State<SearchUi> {
                 fontSize: Spacing.large,
               ),
               const Gap(Spacing.medium),
+
               /// source address and destination address
               Row(
                 children: [
 
                   Column(
                     children: [
-                      const Icon(Icons.my_location, color: CommonColor.darkBlue,),
+                      SvgPicture.asset(CommonSvg.sourceLocation),
                       CustomPaint(
                         size: const Size(10,60),
                         painter: LinearPainter(),
                       ),
-                      const Icon(Icons.location_on, color: CommonColor.darkBlue,),
+                      SvgPicture.asset(CommonSvg.destinationLocation)
                     ],
                   ),
 
@@ -102,58 +95,75 @@ class _SearchUiState extends State<SearchUi> {
                     child: Column(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width/1.2,
-                          child: BlocBuilder<SearchCubit, SearchState>(
-                          builder: (context, state) {
-                            return CommonTextField(
-                            controller: state.sourceAddressController,
-                            hintText: "Source Address",
-                            suffixIcon: Icons.cancel,
-                            suffixIconOnTap: (){
-                              searchCubit.clearList();
-                              state.sourceAddressController.clear();
-                            },
-                            onChanged: (String val){
-                              if(val.trim().isEmpty){
-                                searchCubit.clearList();
-                                print("if ===> ${state.placeList.length}");
-                              }else{
-                                searchCubit.searchLocation(searchLocation: val);
-                                searchCubit.generateSessionKey(sessionKey: state.uuid.v4());
-                                print("else ===> ${state.placeList.length}");
-                              }
-                            },
-                          );
-                          },
-                        ),
+                            width: MediaQuery.of(context).size.width/1.2,
+                            child: CommonTextField(
+                              controller: searchCubit.state.sourceAddressController,
+                              hintText: "From",
+                              onChanged: (val){
+                                searchCubit.searchTextFieldEnable(textFieldEnable: 1);
+                                if(val.trim().isNotEmpty){
+                                  searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());
+                                  searchCubit.searchLocation(searchLocation: val);
+                                  searchCubit.isPlaceListIsEmpty(isPlaceListEmpty: true);
+                                }else{
+                                  searchCubit.clearList();
+                                }
+                              },
+                            )
                         ),
 
                         const Gap(Spacing.medium + Spacing.small),
                         SizedBox(
                             width: MediaQuery.of(context).size.width/1.2,
                             child: CommonTextField(
-                              controller: searchCubit.state.destinationAddressController,
-                              hintText: "Destination Address",
-                              suffixIcon: Icons.cancel,
-                              suffixIconOnTap: () {
-                                searchCubit.clearList();
-                                searchCubit.state.destinationAddressController.clear();
-                              },
-                              onChanged: (val){
-                                if(val.toString().trim().isNotEmpty && searchCubit.state.sessionToken.isNotEmpty){
-                                  searchCubit.searchLocation(searchLocation: val);
+                            controller: searchCubit.state.destinationAddressController,
+                            hintText: "To",
+                            suffixIcon: GestureDetector(
+                              onTap: (){
+                                if(searchCubit.state.destinationAddressController.text.isNotEmpty){
+                                  Navigator.pop(context, "A");
+                                  // Navigator.pop(context, [searchCubit.state.sourceAddressController.text, searchCubit.state.destinationAddressController.text]);
                                 }
-                                searchCubit.clearList();
-                                print("destination textEditing value ====>${searchCubit.state.placeList.length}");
-                                searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());
                               },
-                            )
+                              child: searchCubit.state.destinationAddressController.text.isNotEmpty
+                              ? const Icon(Icons.search) : const Icon(Icons.add),
+                            ),
+                            onChanged: (val){
+                              searchCubit.searchTextFieldEnable(textFieldEnable: 2);
+                              // _debouncer.run(() {
+                              if(val.trim().isNotEmpty){
+                                searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());
+                                searchCubit.searchLocation(searchLocation: val);
+                                searchCubit.isPlaceListIsEmpty(isPlaceListEmpty: true);
+                              }else{
+                                searchCubit.clearList();
+                              }
+                            },
+                            //}
+                          )
                         ),
+
                       ],
                     ),
                   )
                 ],
               ),
+
+              // if(searchCubit.state.sourceAddressController.text.trim().toString().isNotEmpty
+              //     && searchCubit.state.destinationAddressController.text.trim().toString().isNotEmpty)...[
+              //       const Gap(Spacing.medium + Spacing.small),
+              //       Padding(
+              //         padding: const EdgeInsetsDirectional.symmetric(horizontal: Spacing.xxLarge),
+              //         child: SizedBox(
+              //           width: MediaQuery.of(context).size.width,
+              //           child: CommonElevatedButton(
+              //             text: "Search",
+              //             borderRadius: 10.0,
+              //             onPressed: (){},
+              //           ),
+              //         ),
+              //       ),
+              // ],
 
               ///filter result by search
               Expanded(
@@ -161,39 +171,50 @@ class _SearchUiState extends State<SearchUi> {
                   margin: const EdgeInsetsDirectional.only(top: Spacing.medium),
                   child: BlocBuilder<SearchCubit, SearchState>(
                     builder: (context, state) {
-                      return ListView.separated(
-                        itemCount: searchCubit.state.placeList.length,
-                        itemBuilder: (context, index){
-
-                          if(state.placeList.isEmpty){
-                            return const Center(child: CommonText(text: "Search Place..."),);
-                          }else{
+                      print("isPlaceListEmpty ====> ${state.isPlaceListEmpty}");
+                      if(state.isPlaceListEmpty){
+                        return ListView.separated(
+                          itemCount: state.isPlaceListEmpty ? searchCubit.state.placeList.length : 0,
+                          itemBuilder: (context, index){
                             return ListTile(
-                              visualDensity: const VisualDensity(vertical: -4, horizontal: -2),
-                              leading: const Icon(Icons.location_on_sharp, color: CommonColor.green,),
+                              tileColor: Colors.black.withOpacity(0.1),
+                              visualDensity: const VisualDensity(horizontal: -4),
+                              leading: Image.asset(CommonPng.search, scale: Spacing.medium,),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusDirectional.circular(Spacing.xMedium)
+                              ),
                               title: CommonText(
                                 text: state.placeList[index]['description'],
                                 textAlign: TextAlign.start,
                               ),
                               onTap: (){
-
+                                  searchCubit.setTextFieldText(location: state.placeList[index]['description']);
                               },
                             );
-                          }
-
-                        },
-                        separatorBuilder: (context, index){
-                          return const Divider(height: Spacing.small, color: CommonColor.grey,);
-                        },
-                      );
+                          },
+                          separatorBuilder: (context, index){
+                            return const Gap(Spacing.xSmall);
+                          },
+                        );
+                      }
+                      else{
+                        return Center(
+                        child: CommonText(
+                          text: "🔍 Search Place...",
+                          textColor: CommonColor.black.withOpacity(0.6),
+                          fontSize: Spacing.large - Spacing.xSmall,
+                        ),
+                        );
+                      }
                     },
                   ),
                 ),
-              )
+              ),
+
             ],
           ),
-        )
-      ),
+        ),
+      )
     );
   }
 }
@@ -206,7 +227,7 @@ class LinearPainter extends CustomPainter{
         ..strokeWidth = 2;
 
   canvas.drawLine(
-    Offset(size.height/12, size.height/14),
+    Offset(size.height/12, size.height/20),
     Offset(size.height/12, size.height/1),
     paint
   );
@@ -217,6 +238,28 @@ class LinearPainter extends CustomPainter{
     return false;
   }
 }
+
+
+/*class Debouncer{
+  final int millisecond;
+  Timer? timer;
+  Debouncer({required this.millisecond});
+  void run(VoidCallback action){
+    if(timer != null){
+      timer!.cancel();
+    }
+    timer = Timer(Duration(milliseconds: millisecond), action);
+  }
+}*/
+
+/*if(val.toString().trim().isNotEmpty && searchCubit.state.sessionToken.isNotEmpty){
+  searchCubit.searchLocation(searchLocation: val);
+}
+searchCubit.clearList();
+print("destination textEditing value ====>${searchCubit.state.placeList.length}");
+searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());*/
+
+
 
 /// proglabs official
 /// AIzaSyD6bh35rjR-FvgI0FYSFX_a1Z8zMaM22zg

@@ -14,16 +14,19 @@ class HomeUi extends StatefulWidget {
 
   static const String routeName = '/home_ui';
 
-  static Widget builder(BuildContext context) =>
-      BlocProvider(
-        create: (context) =>
-            HomeCubit(HomeState(
-                searchController: TextEditingController(),
-                googleMapController: Completer<GoogleMapController>(),
-                latLag: const LatLng(0.0, 0.0)
-            )),
-        child: const HomeUi(),
-      );
+  static Widget builder(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments ?? "";
+    print("args 1 ====> $args");
+    return BlocProvider(
+      create: (context) =>
+          HomeCubit(HomeState(
+              searchController: TextEditingController(),
+              googleMapController: Completer<GoogleMapController>(),
+              latLag: const LatLng(0.0, 0.0)
+          )),
+      child: const HomeUi(),
+    );
+  }
 
   @override
   State<HomeUi> createState() => _HomeUiState();

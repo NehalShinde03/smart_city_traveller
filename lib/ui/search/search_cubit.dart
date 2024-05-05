@@ -6,6 +6,7 @@ import 'package:smart_city_traveller/ui/search/search_state.dart';
 class SearchCubit extends Cubit<SearchState>{
   SearchCubit(super.initialState);
 
+  /// store current address
   void setSourceAddress(){
       state.sourceAddressController.value = TextEditingValue(text: state.address);
       emit(state.copyWith(sourceAddressController: state.sourceAddressController));
@@ -15,23 +16,48 @@ class SearchCubit extends Cubit<SearchState>{
     emit(state.copyWith(sessionToken: sessionKey));
   }
 
+  /// which search textfield enabled
+  void searchTextFieldEnable({required int textFieldEnable}){
+    emit(state.copyWith(textFieldEnable: textFieldEnable));
+  }
+
+  /// clear place list
   void clearList(){
     emit(state.copyWith(placeList: []));
+    isPlaceListIsEmpty(isPlaceListEmpty: false);
     print("place list length ===> ${state.placeList.length}");
+  }
+
+  /// if false show "search please" otherwise show "list of location"
+  void isPlaceListIsEmpty({required bool isPlaceListEmpty}){
+    emit(state.copyWith(isPlaceListEmpty: isPlaceListEmpty));
+    print("cubit isPlaceEmpty =====> ${state.isPlaceListEmpty}");
   }
 
   /// search location on map
   void searchLocation({required String searchLocation})async{
     String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow";
     String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+    // String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY";
     String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${state.sessionToken}";
     final response = await Dio().get(request);
+
     if(response.statusCode == 200){
+      print("resp ===> $response");
       List placeList = List.from(response.data['predictions']);
       emit(state.copyWith(placeList: placeList));
-      print("m place list length ===> ${state.placeList.length}");
+      print("search list ====> ${state.placeList}");
+    }
+  }
+
+  ///set textField text
+  void setTextFieldText({required String location}){
+    if(state.textFieldEnable == 1){
+      state.sourceAddressController.value = TextEditingValue(text: location);
+      emit(state.copyWith(sourceAddressController: state.sourceAddressController));
     }else{
-      print("something wrong");
+      state.destinationAddressController.value = TextEditingValue(text: location);
+      emit(state.copyWith(destinationAddressController: state.destinationAddressController));
     }
   }
 

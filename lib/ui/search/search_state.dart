@@ -9,6 +9,8 @@ class SearchState extends Equatable {
   final Uuid uuid;
   final String sessionToken;
   final List placeList;
+  final bool isPlaceListEmpty;
+  final int textFieldEnable;
   // final LatLng latLng;
 
   const SearchState({
@@ -17,7 +19,9 @@ class SearchState extends Equatable {
     this.address = "",
     this.uuid = const Uuid(),
     this.sessionToken = "056a8f46-88b8-4a93-ae1b-1b7b391b2733",
-    this.placeList = const []
+    this.placeList = const [],
+    this.isPlaceListEmpty = false,
+    this.textFieldEnable = 0,
     // required this.latLng
   });
 
@@ -28,7 +32,9 @@ class SearchState extends Equatable {
         address /*latLng*/,
         uuid,
         sessionToken,
-        placeList
+        placeList,
+        isPlaceListEmpty,
+        textFieldEnable
       ];
 
   SearchState copyWith({
@@ -37,7 +43,9 @@ class SearchState extends Equatable {
     String? address,
     Uuid? uuid,
     String? sessionToken,
-    List? placeList
+    List? placeList,
+    bool? isPlaceListEmpty,
+    int? textFieldEnable
     /*LatLng? latLng*/
   }) {
     return SearchState(
@@ -48,7 +56,9 @@ class SearchState extends Equatable {
         address: address ?? this.address,
         uuid: uuid ?? this.uuid,
         sessionToken: sessionToken ?? this.sessionToken,
-        placeList: placeList ?? this.placeList
+        placeList: placeList ?? this.placeList,
+        isPlaceListEmpty: isPlaceListEmpty ?? this.isPlaceListEmpty,
+        textFieldEnable : textFieldEnable ?? this.textFieldEnable
         // latLng: latLng ?? this.latLng
         );
   }
