@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/common/common_images.dart';
@@ -124,7 +125,6 @@ class _SearchUiState extends State<SearchUi> {
                                   sharedPreferences.setString('from', searchCubit.state.sourceAddressController.text);
                                   sharedPreferences.setString('to', searchCubit.state.destinationAddressController.text).then((value){
                                     Navigator.pop(context);
-                                    // context.read<BottomNavBarCubit>().onTabChange(BottomNavigationOption.home);
                                   });
                                 }
                               },
@@ -189,7 +189,7 @@ class _SearchUiState extends State<SearchUi> {
                                 text: state.placeList[index]['description'],
                                 textAlign: TextAlign.start,
                               ),
-                              onTap: (){
+                              onTap: () async{
                                   searchCubit.setTextFieldText(location: state.placeList[index]['description']);
                               },
                             );

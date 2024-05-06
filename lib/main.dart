@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: routes,
       initialRoute: SplashUi.routeName,
-      // initialRoute: SplashUi.routeName,
     );
   }
 

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_city_traveller/ui/search/search_state.dart';
+import 'package:http/http.dart' as http;
 
 class SearchCubit extends Cubit<SearchState>{
   SearchCubit(super.initialState);
@@ -34,21 +38,41 @@ class SearchCubit extends Cubit<SearchState>{
     print("cubit isPlaceEmpty =====> ${state.isPlaceListEmpty}");
   }
 
-  /// search location on map
+  /// search location on map|
   void searchLocation({required String searchLocation})async{
     String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow";
     String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-    // String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY";
-    String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${state.sessionToken}";
+    String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY";
+    // String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${state.sessionToken}";
     final response = await Dio().get(request);
-
     if(response.statusCode == 200){
-      print("resp ===> $response");
       List placeList = List.from(response.data['predictions']);
+      final lat =response.data['lat'];
       emit(state.copyWith(placeList: placeList));
-      print("search list ====> ${state.placeList}");
+      print("place ======> ${state.placeList}");
+      print("lat ======> $lat");
     }
   }
+
+
+  // /// search location on map
+  // void searchLocation({required String searchLocation})async{
+  //   String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow";
+  //   String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
+  //   String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY";
+  //   // String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${state.sessionToken}";
+  //   final response = await http.get(Uri.parse(request));
+  //   if(response.statusCode == 200){
+  //     final rsl = json.decode(response.body);
+  //     if(rsl['status'] == 'OK' && rsl['results'].toString().isNotEmpty){
+  //       print("rsl =====> ${rsl['results']}");
+  //       // final location = rsl['results']['geometry']['location'];
+  //       // final latLang = LatLng(location['lat'], location['lng']);
+  //       // print("latLag =======> ${latLang}");
+  //     }
+  //
+  //   }
+  // }
 
   ///set textField text
   void setTextFieldText({required String location}){

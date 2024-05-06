@@ -5,9 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/common/common_spacing.dart';
 import 'package:smart_city_traveller/common/widget/common_text.dart';
+import 'package:smart_city_traveller/common/widget/common_textfield.dart';
 import 'package:smart_city_traveller/ui/home/home_cubit.dart';
 import 'package:smart_city_traveller/ui/home/home_state.dart';
 import 'package:smart_city_traveller/ui/search/search_ui.dart';
@@ -33,22 +35,34 @@ class HomeUi extends StatefulWidget {
   State<HomeUi> createState() => _HomeUiState();
 }
 
-class _HomeUiState extends State<HomeUi> {
+class _HomeUiState extends State<HomeUi> with WidgetsBindingObserver{
 
   HomeCubit get homeCubit => context.read<HomeCubit>();
 
   @override
   void initState() {
     super.initState();
-    // homeCubit.fetchCurrentLocation();
     homeCubit.initSharedPreferences();
-    print("source ====> ${homeCubit.state.sourceAddress}");
-    print("destination ====> ${homeCubit.state.destinationAddress}");
   }
+
+  // @override
+  // Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+  //   if (state == AppLifecycleState.paused) {
+  //     // Clear your data or perform any cleanup here
+  //     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //     sharedPreferences.setString('From','');
+  //     sharedPreferences.setString('To','');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    homeCubit.fetchCurrentLocation();
+
+    // if(homeCubit.state.sourceAddress.isNotEmpty && homeCubit.state.destinationAddress.isNotEmpty){
+    //   homeCubit.addPolyLine();
+    // }else{
+    //   homeCubit.fetchCurrentLocation();
+    // }
 
     return Scaffold(
       /*drawer: Drawer(
@@ -138,92 +152,91 @@ class _HomeUiState extends State<HomeUi> {
         ),
       ),*/
       body: SafeArea(
-        child: Column(
+        child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
+
+          print("source addess =======> ${state.sourceAddress}");
+          print("destination addess =======> ${state.destinationAddress}");
+
+          return Column(
           children: [
 
-            Card(
-              color: CommonColor.teal.withOpacity(0.7),
-              elevation: 5,
-              child: Container(
+            /*if(state.topBarValue == 0)...[
+              Padding(
+                padding: const EdgeInsetsDirectional.symmetric(horizontal: Spacing.xSmall),
+                child: CommonTextField(
+                  controller: state.searchController,
+                  hintText: "Search Location Hear...",
+                  suffixIcon: GestureDetector(
+                    onTap: () {},
+                    child: const Icon(Icons.search),
+                  ),
+                  onChanged: (val){},
+                ),
+              )
+            ]
+            else if(state.topBarValue == 1)...[*/
+              Container(
                 padding: PaddingValue.small,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height/11,
-                child: BlocBuilder<HomeCubit, HomeState>(
-                  builder: (context, state) {
-                    return SingleChildScrollView(
-                      child: Align(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const CommonText(
-                                  text: "From: ",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                CommonText(
-                                  text: state.sourceAddress,
-                                  textAlign: TextAlign.start,
-                                )
-                              ],
-                            ),
-                            const Gap(Spacing.xSmall - 2),
-                            Row(
-                              children: [
-                                const CommonText(
-                                  text: "To: ",
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                CommonText(
-                                  text: state.destinationAddress,
-                                  textAlign: TextAlign.start,
-                                )
-                              ],
-                            ),
-                          ],
+                child: SingleChildScrollView(
+                  child: Align(
+                    alignment: AlignmentDirectional.bottomCenter,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CommonText(
+                          text: "From: ${state.sourceAddress}",
+                          textAlign: TextAlign.start,
+                          fontWeight: TextWeight.semiBold,
                         ),
-                      ),
-                    );
-                  },
+                        const Gap(Spacing.xSmall - 2),
+                        CommonText(
+                          text: "To: ${state.destinationAddress}",
+                          textAlign: TextAlign.start,
+                          fontWeight: TextWeight.semiBold,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+            /*]
+            else...[
+              Container(color: Colors.red,)
+            ],*/
 
             Flexible(
               child: Stack(
                 children: [
-
-                  BlocBuilder<HomeCubit, HomeState>(
-                    builder: (context, state) {
-                      print("called");
-                      return GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: state.latLag,
-                          zoom: 7.0,
-                        ),
-                        onMapCreated: (GoogleMapController controller) {
-                          state.googleMapController.complete(controller);
-                        },
-                        buildingsEnabled: true,
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                        compassEnabled: true,
-                        markers: {
-                          Marker(
-                            markerId: const MarkerId('1'),
-                            icon: BitmapDescriptor.defaultMarker,
-                            position: state.latLag,
-                            infoWindow: InfoWindow(
-                              title: state.address,
-                            ),
-                          )
-                        },
-                        zoomControlsEnabled: false,
-                        trafficEnabled: true,
-                        mapToolbarEnabled: false,
-                      );
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: state.latLag,
+                      zoom: 7.0,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      state.googleMapController.complete(controller);
+                      // homeCubit.addPolyLine();
                     },
+                    buildingsEnabled: true,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: false,
+                    compassEnabled: true,
+                    // markers: {
+                    //   Marker(
+                    //     markerId: const MarkerId('1'),
+                    //     icon: BitmapDescriptor.defaultMarker,
+                    //     position: state.latLag,
+                    //     infoWindow: InfoWindow(
+                    //       title: state.address,
+                    //     ),
+                    //   )
+                    // },
+                    zoomControlsEnabled: false,
+                    trafficEnabled: true,
+                    mapToolbarEnabled: false,
+                    polylines: state.setPolyLine,
                   ),
 
                   /* state.isDirectionIconClick
@@ -295,8 +308,12 @@ class _HomeUiState extends State<HomeUi> {
 
                           FloatingActionButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, SearchUi.routeName, arguments: homeCubit.state.address).then((value) {
+                              Navigator.pushNamed(context, SearchUi.routeName, arguments: state.address).then((value) {
                                 homeCubit.initSharedPreferences();
+                                /*if(state.sourceAddress.isNotEmpty && state.destinationAddress.isNotEmpty){
+                                  // SharedPreferences
+                                }*/
+                                // homeCubit.addPolyLine();
                               });
                             },
                             backgroundColor: CommonColor.darkBlue,
@@ -306,12 +323,13 @@ class _HomeUiState extends State<HomeUi> {
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
           ],
-        ),
+         );
+        },
+      ),
       )
     );
   }

@@ -14,6 +14,9 @@ class HomeState extends Equatable {
   final LatLng latLag;
   final String sourceAddress;
   final String destinationAddress;
+  final Set<Polyline> setPolyLine;
+  final int topBarValue;
+
 
   const HomeState({
     this.userInfo = const [],
@@ -25,6 +28,8 @@ class HomeState extends Equatable {
     required this.latLag,
     this.sourceAddress = "",
     this.destinationAddress = "",
+    this.setPolyLine = const {},
+    this.topBarValue = 0
   });
 
   @override
@@ -37,7 +42,9 @@ class HomeState extends Equatable {
         address,
         latLag,
         sourceAddress,
-        destinationAddress
+        destinationAddress,
+        setPolyLine,
+        topBarValue
       ];
 
   HomeState copyWith({
@@ -51,6 +58,8 @@ class HomeState extends Equatable {
     LatLng? latLag,
     String? sourceAddress,
     String? destinationAddress,
+    Set<Polyline>? setPolyLine,
+    int? topBarValue
   }) {
     return HomeState(
       userInfo: userInfo ?? this.userInfo,
@@ -61,7 +70,9 @@ class HomeState extends Equatable {
       address: address ?? this.address,
       latLag: latLag ?? this.latLag,
       sourceAddress: sourceAddress ?? this.sourceAddress,
-      destinationAddress: destinationAddress ?? this.destinationAddress
+      destinationAddress: destinationAddress ?? this.destinationAddress,
+      setPolyLine: setPolyLine ?? this.setPolyLine,
+      topBarValue: topBarValue ?? this.topBarValue
     );
   }
 }
