@@ -11,15 +11,18 @@ class HomeCubit extends Cubit<HomeState>{
   void initSharedPreferences() async{
     print("enter");
     final SharedPreferences preferences = await SharedPreferences.getInstance();
-    emit(state.copyWith(userInfo: preferences.getStringList('userInfo')));
+    emit(state.copyWith(
+        userInfo: preferences.getStringList('userInfo'),
+        sourceAddress: preferences.getString('from') ?? "",
+        destinationAddress: preferences.getString('to') ?? "",
+    ));
     print("cubit exe");
+    print("cubit s a ====> ${preferences.getString('from')}");
+    print("cubit d a ====> ${preferences.getString('to')}");
   }
 
-/*  void isDirectionIconClick({required bool isDirectionIconClick}){
-    emit(state.copyWith(isDirectionIconClick: isDirectionIconClick));
-  }*/
 
-
+  /// fetch current location
   void fetchCurrentLocation() async{
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high

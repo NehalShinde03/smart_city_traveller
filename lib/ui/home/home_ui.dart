@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/common/common_spacing.dart';
+import 'package:smart_city_traveller/common/widget/common_text.dart';
 import 'package:smart_city_traveller/ui/home/home_cubit.dart';
 import 'package:smart_city_traveller/ui/home/home_state.dart';
 import 'package:smart_city_traveller/ui/search/search_ui.dart';
@@ -15,8 +18,6 @@ class HomeUi extends StatefulWidget {
   static const String routeName = '/home_ui';
 
   static Widget builder(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments ?? "";
-    print("args 1 ====> $args");
     return BlocProvider(
       create: (context) =>
           HomeCubit(HomeState(
@@ -40,12 +41,16 @@ class _HomeUiState extends State<HomeUi> {
   void initState() {
     super.initState();
     // homeCubit.fetchCurrentLocation();
+    homeCubit.initSharedPreferences();
+    print("source ====> ${homeCubit.state.sourceAddress}");
+    print("destination ====> ${homeCubit.state.destinationAddress}");
   }
 
   @override
   Widget build(BuildContext context) {
     homeCubit.fetchCurrentLocation();
-     return Scaffold(
+
+    return Scaffold(
       /*drawer: Drawer(
         backgroundColor: CommonColor.black.withOpacity(0.8),
         child: Column(
@@ -132,133 +137,182 @@ class _HomeUiState extends State<HomeUi> {
           ],
         ),
       ),*/
-      body: BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        return Stack(
-        children: [
-          /*  Padding(
-            padding: const EdgeInsetsDirectional.only(
-              start: Spacing.medium,
-              end: Spacing.medium,
-              top: Spacing.medium,
-              bottom: Spacing.small
-            ),
-            child: CommonTextField(
-                controller: homeCubit.state.searchController,
-                suffixIcon: Icons.search,
-                hintText: "Search here",
-                prefixImagePath: CommonPng.googleMap,
-              // prefixIcon: ,
-            ),
-          ),*/
+      body: SafeArea(
+        child: Column(
+          children: [
 
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: state.latLag,
-              zoom: 7.0,
-            ),
-            onMapCreated: (GoogleMapController controller) {
-              state.googleMapController.complete(controller);
-            },
-            buildingsEnabled: true,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            compassEnabled: true,
-            markers: {
-              Marker(
-                  markerId: const MarkerId('1'),
-                  icon: BitmapDescriptor.defaultMarker,
-                  position: state.latLag,
-                  infoWindow: InfoWindow(
-                    title: state.address,
-                  ),
-              )
-            },
-            zoomControlsEnabled: false,
-            trafficEnabled: true,
-            mapToolbarEnabled: false,
-          ),
-
-        /* state.isDirectionIconClick
-          ? Container(
-            color: CommonColor.white,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                      start: Spacing.medium,
-                      end: Spacing.medium,
-                      top: Spacing.medium,
-                      bottom: Spacing.small
-                  ),
-                  child: CommonTextField(
-                    controller: homeCubit.state.searchController,
-                    // suffixIcon: Icons.search,
-                    hintText: "Source Address",
-                    // prefixImagePath: CommonPng.googleMap,
-                  ),
+            Card(
+              color: CommonColor.teal.withOpacity(0.7),
+              elevation: 5,
+              child: Container(
+                padding: PaddingValue.small,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height/11,
+                child: BlocBuilder<HomeCubit, HomeState>(
+                  builder: (context, state) {
+                    return SingleChildScrollView(
+                      child: Align(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const CommonText(
+                                  text: "From: ",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                CommonText(
+                                  text: state.sourceAddress,
+                                  textAlign: TextAlign.start,
+                                )
+                              ],
+                            ),
+                            const Gap(Spacing.xSmall - 2),
+                            Row(
+                              children: [
+                                const CommonText(
+                                  text: "To: ",
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                CommonText(
+                                  text: state.destinationAddress,
+                                  textAlign: TextAlign.start,
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.only(
-                      start: Spacing.medium,
-                      end: Spacing.medium,
-                      top: Spacing.xSmall,
-                      bottom: Spacing.small
-                  ),
-                  child: CommonTextField(
-                    controller: homeCubit.state.searchController,
-                    // suffixIcon: Icons.search,
-                    hintText: "Destination Address",
-                    // prefixImagePath: CommonPng.googleMap,
-                    // prefixIcon: ,
-                  ),
-                ),
-              ],
-            ),
-          )
-          : SizedBox(),
-*/
-
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.only(
-                  end: Spacing.medium,
-                  bottom: Spacing.medium,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+            ),
+
+            Flexible(
+              child: Stack(
                 children: [
 
-                  GestureDetector(
-                    onTap: () => homeCubit.fetchCurrentLocation(),
-                    child: const CircleAvatar(
-                      radius: Spacing.xxLarge,
-                      backgroundColor: CommonColor.white,
-                      child: Icon(
-                        Icons.my_location,
-                        color: CommonColor.darkBlue,
+                  BlocBuilder<HomeCubit, HomeState>(
+                    builder: (context, state) {
+                      print("called");
+                      return GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: state.latLag,
+                          zoom: 7.0,
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          state.googleMapController.complete(controller);
+                        },
+                        buildingsEnabled: true,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        compassEnabled: true,
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId('1'),
+                            icon: BitmapDescriptor.defaultMarker,
+                            position: state.latLag,
+                            infoWindow: InfoWindow(
+                              title: state.address,
+                            ),
+                          )
+                        },
+                        zoomControlsEnabled: false,
+                        trafficEnabled: true,
+                        mapToolbarEnabled: false,
+                      );
+                    },
+                  ),
+
+                  /* state.isDirectionIconClick
+                  ? Container(
+                    color: CommonColor.white,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                              start: Spacing.medium,
+                              end: Spacing.medium,
+                              top: Spacing.medium,
+                              bottom: Spacing.small
+                          ),
+                          child: CommonTextField(
+                            controller: homeCubit.state.searchController,
+                            // suffixIcon: Icons.search,
+                            hintText: "Source Address",
+                            // prefixImagePath: CommonPng.googleMap,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                              start: Spacing.medium,
+                              end: Spacing.medium,
+                              top: Spacing.xSmall,
+                              bottom: Spacing.small
+                          ),
+                          child: CommonTextField(
+                            controller: homeCubit.state.searchController,
+                            // suffixIcon: Icons.search,
+                            hintText: "Destination Address",
+                            // prefixImagePath: CommonPng.googleMap,
+                            // prefixIcon: ,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  : SizedBox(),
+              */
+
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        end: Spacing.medium,
+                        bottom: Spacing.medium,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+
+                          GestureDetector(
+                            onTap: () => homeCubit.fetchCurrentLocation(),
+                            child: const CircleAvatar(
+                              radius: Spacing.xxLarge,
+                              backgroundColor: CommonColor.white,
+                              child: Icon(
+                                Icons.my_location,
+                                color: CommonColor.darkBlue,
+                              ),
+                            ),
+                          ),
+
+                          const Gap(Spacing.medium),
+
+                          FloatingActionButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, SearchUi.routeName, arguments: homeCubit.state.address).then((value) {
+                                homeCubit.initSharedPreferences();
+                              });
+                            },
+                            backgroundColor: CommonColor.darkBlue,
+                            child: const Icon(Icons.directions_sharp, color: CommonColor.white, size: Spacing.xxxLarge,),
+                          ),
+                        ],
                       ),
                     ),
                   ),
 
-                  const Gap(Spacing.medium),
-
-                  FloatingActionButton(
-                    onPressed: () => Navigator.pushNamed(context, SearchUi.routeName, arguments: state.address),
-                    backgroundColor: CommonColor.darkBlue,
-                    child: const Icon(Icons.directions_sharp, color: CommonColor.white, size: Spacing.xxxLarge,),
-                  ),
                 ],
               ),
             ),
-          )
-        ],
-      );
-      },
-    ),
+          ],
+        ),
+      )
     );
   }
 }

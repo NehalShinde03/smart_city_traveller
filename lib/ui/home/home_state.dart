@@ -12,6 +12,8 @@ class HomeState extends Equatable {
   final Completer<GoogleMapController> googleMapController;
   final String address;
   final LatLng latLag;
+  final String sourceAddress;
+  final String destinationAddress;
 
   const HomeState({
     this.userInfo = const [],
@@ -20,7 +22,9 @@ class HomeState extends Equatable {
     // this.isDirectionIconClick = false,
     required this.googleMapController,
     this.address = "",
-    required this.latLag
+    required this.latLag,
+    this.sourceAddress = "",
+    this.destinationAddress = "",
   });
 
   @override
@@ -31,7 +35,9 @@ class HomeState extends Equatable {
         // isDirectionIconClick,
         googleMapController,
         address,
-        latLag
+        latLag,
+        sourceAddress,
+        destinationAddress
       ];
 
   HomeState copyWith({
@@ -43,6 +49,8 @@ class HomeState extends Equatable {
     Completer<GoogleMapController>? googleMapController,
     String? address,
     LatLng? latLag,
+    String? sourceAddress,
+    String? destinationAddress,
   }) {
     return HomeState(
       userInfo: userInfo ?? this.userInfo,
@@ -51,7 +59,9 @@ class HomeState extends Equatable {
       // isDirectionIconClick: isDirectionIconClick ?? this.isDirectionIconClick,
       googleMapController: googleMapController ?? this.googleMapController,
       address: address ?? this.address,
-      latLag: latLag ?? this.latLag
+      latLag: latLag ?? this.latLag,
+      sourceAddress: sourceAddress ?? this.sourceAddress,
+      destinationAddress: destinationAddress ?? this.destinationAddress
     );
   }
 }
