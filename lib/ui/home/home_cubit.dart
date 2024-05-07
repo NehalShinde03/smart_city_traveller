@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,81 +17,204 @@ class HomeCubit extends Cubit<HomeState>{
         userInfo: preferences.getStringList('userInfo'),
         sourceAddress: preferences.getString('from') ?? "",
         destinationAddress: preferences.getString('to') ?? "",
+        mapTopBarValue: preferences.getString('mapTopBarValue')
     ));
 
-    if(state.sourceAddress.isNotEmpty && state.destinationAddress.isNotEmpty){
-      print("source address ----> ${state.sourceAddress}");
-      print("destination address ----> ${state.destinationAddress}");
-      final convertAddressToCoordinates = await locationFromAddress(state.sourceAddress);
-      LatLng latLng = LatLng(convertAddressToCoordinates.last.latitude, convertAddressToCoordinates.last.longitude);
-      emit(state.copyWith(latLag: latLng));
-      addPolyLine();
-    }else{
-      fetchCurrentLocation();
-    }
+    // if(state.sourceAddress.isNotEmpty && state.destinationAddress.isNotEmpty){
+    //   print("source address ----> ${state.sourceAddress}");
+    //   print("destination address ----> ${state.destinationAddress}");
+    //   final convertAddressToCoordinates = await locationFromAddress(state.sourceAddress);
+    //   LatLng latLng = LatLng(convertAddressToCoordinates.last.latitude, convertAddressToCoordinates.last.longitude);
+    //   emit(state.copyWith(latLag: latLng));
+    //   addPolyLine();
+    // }else{
+    //   fetchCurrentLocation();
+    // }
 
   }
 
 
   /// fetch current location
-  void fetchCurrentLocation() async{
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high
-    );
-    final GoogleMapController controller = await state.googleMapController.future;
-    emit(state.copyWith(latLag: LatLng(position.latitude, position.longitude)));
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
-            zoom: 15.0,
-            bearing: 0.0
-        ),
-    ));
-    List<Placemark> placeMarks = List.from(await placemarkFromCoordinates(position.latitude, position.longitude));
-    Placemark placeMark = placeMarks[0];
-    String address = "${placeMark.street}, ${placeMark.name}, ${placeMark.locality}, ${placeMark.administrativeArea}, ${placeMark.postalCode}, ${placeMark.country}";
-    emit(state.copyWith(address: address));
+/*  void fetchCurrentLocation() async{
+    try{
+      Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high)
+      ).listen((Position? position) async {
+        if(position!=null){
+          emit(state.copyWith(latLag: LatLng(position.latitude, position.longitude)));
+          final GoogleMapController controller = await state.googleMapController.future;
+          controller.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: state.latLag,
+              zoom: 18.0,
+            ),
+          ));
+          List<Placemark> placeMarks = List.from(await placemarkFromCoordinates(position.latitude, position.longitude));
+          if(placeMarks.isNotEmpty){
+            Placemark placeMark = placeMarks.first;
+            String address = "${placeMark.street}, ${placeMark.name}, ${placeMark.locality}, ${placeMark.administrativeArea}, ${placeMark.postalCode}, ${placeMark.country}";
+            emit(state.copyWith(address: address));
+            print("addreess ====> ${address}");
+          }
+        }
+      });
+    }catch(e){
+        print("fetch Current Location Exception ====> $e");
+    }
+  }*/
 
-    print("addreess ====> ${placeMarks}");
+
+    void fetchCurrentLocation() async{
+      try{
+        // emit(state.copyWith(setMarkers: {}));
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high
+        );
+        final GoogleMapController controller = await state.googleMapController.future;
+        emit(state.copyWith(latLag: LatLng(position.latitude, position.longitude)));
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 18.0,
+          ),
+        ));
+        List<Placemark> placeMarks = List.from(await placemarkFromCoordinates(position.latitude, position.longitude));
+        Placemark placeMark = placeMarks.first;
+        String address = "${placeMark.street}, ${placeMark.name}, ${placeMark.locality}, ${placeMark.administrativeArea}, ${placeMark.postalCode}, ${placeMark.country}";
+        emit(state.copyWith(
+          address: address,
+/*
+          setMarkers: {
+              Marker(
+                markerId: const MarkerId('CurrentLocation_0'),
+                icon: BitmapDescriptor.defaultMarker,
+                position: state.latLag,
+                infoWindow: InfoWindow(
+                  title: state.address,
+                ),
+              )
+          }
+*/
+        ));
+      }catch(e){
+        print("fetch current location exception =====> $e");
+      }
   }
 
-
-  void setTopBar({required int topBarValue}){
-    emit(state.copyWith(topBarValue: topBarValue));
+  /// if 0 - show TextField ---> 1 - From&To ------> 2 - countDown
+  void setMapTopBarValue({required String topBarValue}) async{
+    emit(state.copyWith(mapTopBarValue: topBarValue));
+    SharedPreferences preference = await SharedPreferences.getInstance();
+    preference.setString('mapTopBarValue', topBarValue);
+    emit(state.copyWith(setMarkers: {}));
   }
 
   /// add polyLine
-  Future<void> addPolyLine() async {
-    final convertAddressToCoordinates = await locationFromAddress(state.destinationAddress);
-    final destination = LatLng(convertAddressToCoordinates.last.latitude, convertAddressToCoordinates.last.longitude);
-    List<LatLng> polyLineCoordinates = [state.latLag, destination];
+  Future<void> addPolyLine(String sourceAddress, String destinationAddress) async {
+    print("add poly Line source =====> $sourceAddress");
+    print("add poly Line destination =====> $destinationAddress");
 
-    print("point 1 ====> ${state.latLag}");
-    print("point 2 ====> $destination");
+    try{
+      final convertSourceAddressToCoordinates = await locationFromAddress(sourceAddress);
+      final convertDestinationAddressToCoordinates = await locationFromAddress(destinationAddress);
 
-    Polyline polyline = Polyline(
-        polylineId: const PolylineId("poly"),
-        points: polyLineCoordinates,
-        width: 5,
-        color: CommonColor.blue
-    );
+      final LatLng sourceAddressCoordinates = LatLng(convertSourceAddressToCoordinates.last.latitude, convertSourceAddressToCoordinates.last.longitude);
+      final LatLng destinationAddressCoordinates = LatLng(convertDestinationAddressToCoordinates.last.latitude, convertDestinationAddressToCoordinates.last.longitude);
+      // List<LatLng> polyLineCoordinates = [sourceAddressCoordinates, destinationAddressCoordinates];
 
-    Set<Polyline> setPolyLine = {polyline};
-    // setPolyLine.add(polyline);
-    emit(state.copyWith(setPolyLine: setPolyLine));
+      print("point 1 ====> $sourceAddressCoordinates");
+      print("point 2 ====> $destinationAddressCoordinates");
 
-    // GoogleMapController googleMapController = await state.googleMapController.future;
-    // googleMapController.animateCamera(
-    //   CameraUpdate.newLatLngBounds(
-    //     LatLngBounds(
-    //         southwest: destination,
-    //         northeast: source,
-    //     ), 50
-    //   )
-    // );
+      Polyline polyline = Polyline(
+          polylineId: const PolylineId("poly"),
+          points: [sourceAddressCoordinates, destinationAddressCoordinates],
+          width: 5,
+          color: CommonColor.blue,
+          geodesic: true
+      );
+
+      emit(state.copyWith(
+          setPolyLine: {polyline},
+          listOfCoordinates: [sourceAddressCoordinates, destinationAddressCoordinates],
+          setMarkers: {
+            Marker(
+              markerId: const MarkerId('SourceLocation_0'),
+              icon: BitmapDescriptor.defaultMarker,
+              position: sourceAddressCoordinates,
+              infoWindow: InfoWindow(
+                title: sourceAddress,
+              ),
+            ),
+            Marker(
+              markerId: const MarkerId('destinationLocation_1'),
+              position: destinationAddressCoordinates,
+              infoWindow: InfoWindow(
+                title: destinationAddress,
+              ),
+            )
+          }),
+      );
+
+      final GoogleMapController googleMapController = await state.googleMapController.future;
+      googleMapController.animateCamera(
+          CameraUpdate.newLatLngBounds(
+              LatLngBounds(
+                southwest: LatLng(
+                    sourceAddressCoordinates.latitude <= destinationAddressCoordinates.latitude
+                        ? sourceAddressCoordinates.latitude
+                        : destinationAddressCoordinates.latitude,
+                    sourceAddressCoordinates.longitude <= destinationAddressCoordinates.longitude
+                        ? sourceAddressCoordinates.longitude
+                        : destinationAddressCoordinates.longitude
+                ),
+                northeast: LatLng(
+                    sourceAddressCoordinates.latitude <= destinationAddressCoordinates.longitude
+                        ? destinationAddressCoordinates.latitude
+                        : sourceAddressCoordinates.latitude,
+                    sourceAddressCoordinates.longitude <= destinationAddressCoordinates.longitude
+                        ? destinationAddressCoordinates.longitude
+                        : sourceAddressCoordinates.longitude
+                ),
+              ), 149
+          )
+      );
+    }catch(e){
+      print("add Polyline ======> $e");
+    }
+
+
+
+    /*final GoogleMapController controller = await state.googleMapController.future;
+    emit(state.copyWith(latLag: LatLng(position.latitude, position.longitude)));
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(position.latitude, position.longitude),
+        zoom: 18.0,
+      ),
+    ));*/
+
   }
+}
 
 
 // 204, 204, surat, gujarat, 395008, india
 
-}
+/*[ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: MissingPluginException(No implementation found for method camera#animate on channel plugins.flutter.dev/google_maps_android_0)
+E/flutter (20139): #0      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:332:7)
+E/flutter (20139): <asynchronous suspension>*/
+
+/// reduce padding of icon button
+/// IconButton(
+//                           onPressed: () => print("hello"),
+//                           icon: const Icon(Icons.close, size: Spacing.large,),
+//                           padding: PaddingValue.zero,
+//                           constraints: BoxConstraints(),
+//                           style: ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+//                       )
+
+
+/*
+* 0 = TextField
+* 1 = Source and destination
+* 2 = timer
+* */

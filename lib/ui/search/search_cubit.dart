@@ -54,26 +54,6 @@ class SearchCubit extends Cubit<SearchState>{
     }
   }
 
-
-  // /// search location on map
-  // void searchLocation({required String searchLocation})async{
-  //   String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow";
-  //   String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-  //   String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY";
-  //   // String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${state.sessionToken}";
-  //   final response = await http.get(Uri.parse(request));
-  //   if(response.statusCode == 200){
-  //     final rsl = json.decode(response.body);
-  //     if(rsl['status'] == 'OK' && rsl['results'].toString().isNotEmpty){
-  //       print("rsl =====> ${rsl['results']}");
-  //       // final location = rsl['results']['geometry']['location'];
-  //       // final latLang = LatLng(location['lat'], location['lng']);
-  //       // print("latLag =======> ${latLang}");
-  //     }
-  //
-  //   }
-  // }
-
   ///set textField text
   void setTextFieldText({required String location}){
     if(state.textFieldEnable == 1){

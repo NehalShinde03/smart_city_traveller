@@ -122,6 +122,7 @@ class _SearchUiState extends State<SearchUi> {
                               onTap: () async{
                                 if(searchCubit.state.destinationAddressController.text.isNotEmpty){
                                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                  sharedPreferences.setString('mapTopBarValue','1');
                                   sharedPreferences.setString('from', searchCubit.state.sourceAddressController.text);
                                   sharedPreferences.setString('to', searchCubit.state.destinationAddressController.text).then((value){
                                     Navigator.pop(context);
@@ -144,7 +145,6 @@ class _SearchUiState extends State<SearchUi> {
                             //}
                           )
                         ),
-
                       ],
                     ),
                   )
