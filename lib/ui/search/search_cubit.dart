@@ -71,3 +71,4 @@ class SearchCubit extends Cubit<SearchState>{
 
 ///place api :: AIzaSyCXb3JSLUgurnIUOgtB599ncur-Mvja5a4
 ///https://console.cloud.google.com/welcome/new?project=big-station-421712
+///ok
