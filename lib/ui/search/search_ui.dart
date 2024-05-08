@@ -120,7 +120,7 @@ class _SearchUiState extends State<SearchUi> {
                             hintText: "To",
                             suffixIcon: GestureDetector(
                               onTap: () async{
-                                if(searchCubit.state.destinationAddressController.text.isNotEmpty){
+                                if(searchCubit.state.sourceAddressController.text.isNotEmpty && searchCubit.state.destinationAddressController.text.isNotEmpty){
                                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                                   sharedPreferences.setString('mapTopBarValue','1');
                                   sharedPreferences.setString('from', searchCubit.state.sourceAddressController.text);

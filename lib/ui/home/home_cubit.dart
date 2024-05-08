@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,7 +21,6 @@ class HomeCubit extends Cubit<HomeState>{
         destinationAddress: preferences.getString('to') ?? "",
         mapTopBarValue: preferences.getString('mapTopBarValue')
     ));
-
     // if(state.sourceAddress.isNotEmpty && state.destinationAddress.isNotEmpty){
     //   print("source address ----> ${state.sourceAddress}");
     //   print("destination address ----> ${state.destinationAddress}");
@@ -30,7 +31,6 @@ class HomeCubit extends Cubit<HomeState>{
     // }else{
     //   fetchCurrentLocation();
     // }
-
   }
 
 
@@ -109,6 +109,7 @@ class HomeCubit extends Cubit<HomeState>{
     emit(state.copyWith(setMarkers: {}));
   }
 
+
   /// add polyLine
   Future<void> addPolyLine(String sourceAddress, String destinationAddress) async {
     print("add poly Line source =====> $sourceAddress");
@@ -120,22 +121,39 @@ class HomeCubit extends Cubit<HomeState>{
 
       final LatLng sourceAddressCoordinates = LatLng(convertSourceAddressToCoordinates.last.latitude, convertSourceAddressToCoordinates.last.longitude);
       final LatLng destinationAddressCoordinates = LatLng(convertDestinationAddressToCoordinates.last.latitude, convertDestinationAddressToCoordinates.last.longitude);
-      // List<LatLng> polyLineCoordinates = [sourceAddressCoordinates, destinationAddressCoordinates];
+      List<LatLng> polyLineCoordinates = [sourceAddressCoordinates, destinationAddressCoordinates];
 
       print("point 1 ====> $sourceAddressCoordinates");
       print("point 2 ====> $destinationAddressCoordinates");
 
+      // PolylinePoints polylinePoints = PolylinePoints();
+      // List<LatLng> polylineCoordinates = [];
+      // Map<PolylineId, Polyline> polyLine = {};
+      //
+      // PolylineResult polylineResult = await polylinePoints.getRouteBetweenCoordinates(
+      //     "AIzaSyCGShAceyIm1LHL2mLja0eKCKDjoZV2RzY",
+      //     PointLatLng(sourceAddressCoordinates.latitude, sourceAddressCoordinates.longitude),
+      //     PointLatLng(destinationAddressCoordinates.latitude, destinationAddressCoordinates.longitude),
+      // );
+      //
+      // if(polylineResult.points.isNotEmpty){
+      //    polylineResult.points.map((e){
+      //
+      //    });
+      // }
+      getResponse(sourceAddressCoordinates, destinationAddressCoordinates);
+
       Polyline polyline = Polyline(
           polylineId: const PolylineId("poly"),
-          points: [sourceAddressCoordinates, destinationAddressCoordinates],
+          points: polyLineCoordinates,
           width: 5,
           color: CommonColor.blue,
-          geodesic: true
+          geodesic: true,
       );
 
       emit(state.copyWith(
           setPolyLine: {polyline},
-          listOfCoordinates: [sourceAddressCoordinates, destinationAddressCoordinates],
+          listOfCoordinates: polyLineCoordinates,
           setMarkers: {
             Marker(
               markerId: const MarkerId('SourceLocation_0'),
@@ -152,7 +170,8 @@ class HomeCubit extends Cubit<HomeState>{
                 title: destinationAddress,
               ),
             )
-          }),
+          },
+        ),
       );
 
       final GoogleMapController googleMapController = await state.googleMapController.future;
@@ -181,19 +200,19 @@ class HomeCubit extends Cubit<HomeState>{
     }catch(e){
       print("add Polyline ======> $e");
     }
-
-
-
-    /*final GoogleMapController controller = await state.googleMapController.future;
-    emit(state.copyWith(latLag: LatLng(position.latitude, position.longitude)));
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        target: LatLng(position.latitude, position.longitude),
-        zoom: 18.0,
-      ),
-    ));*/
-
   }
+
+
+
+  getResponse(LatLng sourceAddressCoordinates, LatLng destinationAddressCoordinates) async{
+      String request = "https://maps.googleapis.com/maps/api/directions/json?origin=${sourceAddressCoordinates.latitude}%2C-${sourceAddressCoordinates.longitude}&destination=${destinationAddressCoordinates.latitude}%2C-${destinationAddressCoordinates.longitude}&key=AIzaSyCGShAceyIm1LHL2mLja0eKCKDjoZV2RzY";
+      // PolylineResult result = PolylinePoints.
+      final response = await Dio().get(request);
+      if(response.statusCode == 200){
+        print("list of data =====? ${response.data}");
+      }
+  }
+
 }
 
 
@@ -217,5 +236,8 @@ E/flutter (20139): <asynchronous suspension>*/
 * 0 = TextField
 * 1 = Source and destination
 * 2 = timer
-* */
+*/
 //ok
+///AIzaSyAlGfqovveJyIrEKxA4D4s1VbAgBWc5GKA place
+///AIzaSyCGShAceyIm1LHL2mLja0eKCKDjoZV2RzY direction
+///https://blog.codemagic.io/creating-a-route-calculator-using-google-maps/

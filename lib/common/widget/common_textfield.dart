@@ -55,6 +55,8 @@ class CommonTextField extends StatelessWidget {
             color: CommonColor.grey, fontWeight: FontWeight.bold),
         hintText: hintText,
         suffixIcon: suffixIcon,
+        // filled: true,
+        // fillColor: CommonColor.black,
         //  ? GestureDetector(
         //   onTap: suffixIconOnTap,
         //   child: Container(
@@ -86,6 +88,10 @@ class CommonTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(Spacing.medium),
           borderSide: BorderSide(color: borderColor),
         ),
+        // enabledBorder: OutlineInputBorder(
+        //   borderRadius: BorderRadius.circular(Spacing.medium),
+        //   borderSide: BorderSide(color: borderColor),
+        // ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(Spacing.medium),
           borderSide: BorderSide(color: borderColor),

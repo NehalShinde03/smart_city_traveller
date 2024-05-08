@@ -116,3 +116,29 @@
     //   )
     // );
   }*/
+
+/*Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Flexible(
+              child: Padding(
+            padding: const EdgeInsetsDirectional.only(top: Spacing.xSmall),
+            child: CommonTextField(controller: state.searchController),
+          )),
+          const Gap(Spacing.xSmall),
+          IconButton(
+            onPressed: () => print("hello"),
+            icon: Icon(
+              Icons.close,
+              color: CommonColor.black.withOpacity(0.8),
+              size: Spacing.large,
+            ),
+            style: const ButtonStyle(
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            padding: PaddingValue.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      );*/

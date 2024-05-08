@@ -92,7 +92,7 @@ class _HomeUiState extends State<HomeUi> with WidgetsBindingObserver {
                         mapToolbarEnabled: false,
                         polylines: state.mapTopBarValue == '0' ? {} : (state.setPolyLine),
                       );
-                    },
+                      },
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
@@ -236,30 +236,11 @@ class _HomeUiState extends State<HomeUi> with WidgetsBindingObserver {
       );
     } else {
       homeCubit.fetchCurrentLocation();
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Flexible(
-              child: Padding(
-            padding: const EdgeInsetsDirectional.only(top: Spacing.xSmall),
-            child: CommonTextField(controller: state.searchController),
-          )),
-          const Gap(Spacing.xSmall),
-          IconButton(
-            onPressed: () => print("hello"),
-            icon: Icon(
-              Icons.close,
-              color: CommonColor.black.withOpacity(0.8),
-              size: Spacing.large,
-            ),
-            style: const ButtonStyle(
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            padding: PaddingValue.zero,
-            constraints: const BoxConstraints(),
-          ),
-        ],
+      return Padding(
+        padding: const EdgeInsetsDirectional.only(top: Spacing.xSmall,),
+        child: CommonTextField(
+          controller: state.searchController,
+        ),
       );
     }
   }

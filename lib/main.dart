@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
     GoUi.routeName:GoUi.builder,
     TimeSlotUi.routeName:TimeSlotUi.builder,
     ProfileUi.routeName:ProfileUi.builder,
+    // DropDownUi.routeName:DropDownUi.builder
   };
 
 }
