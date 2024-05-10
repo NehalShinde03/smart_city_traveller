@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/ui/home/home_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +19,9 @@ class HomeCubit extends Cubit<HomeState>{
         userInfo: preferences.getStringList('userInfo'),
         sourceAddress: preferences.getString('from') ?? "",
         destinationAddress: preferences.getString('to') ?? "",
-        mapTopBarValue: preferences.getString('mapTopBarValue')
+        mapTopBarValue: preferences.getString('mapTopBarValue'),
+        differenceBetweenTime: preferences.getString('differenceBetweenTime') ?? ""
+        // mapTopBarValue: preferences.getString('mapTopBarValue'),
     ));
     // if(state.sourceAddress.isNotEmpty && state.destinationAddress.isNotEmpty){
     //   print("source address ----> ${state.sourceAddress}");
@@ -64,7 +66,7 @@ class HomeCubit extends Cubit<HomeState>{
   }*/
 
 
-    void fetchCurrentLocation() async{
+  void fetchCurrentLocation() async{
       try{
         // emit(state.copyWith(setMarkers: {}));
         Position position = await Geolocator.getCurrentPosition(
@@ -109,6 +111,15 @@ class HomeCubit extends Cubit<HomeState>{
     emit(state.copyWith(setMarkers: {}));
   }
 
+  /// remaining time
+  void remainingTime(){
+    final  remainingTime = DateFormat(state.differenceBetweenTime);
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if(timer.tick >= 0){
+
+      }
+    });
+  }
 
   /// add polyLine
   Future<void> addPolyLine(String sourceAddress, String destinationAddress) async {
@@ -205,7 +216,7 @@ class HomeCubit extends Cubit<HomeState>{
 
 
   getResponse(LatLng sourceAddressCoordinates, LatLng destinationAddressCoordinates) async{
-      String request = "https://maps.googleapis.com/maps/api/directions/json?origin=${sourceAddressCoordinates.latitude}%2C-${sourceAddressCoordinates.longitude}&destination=${destinationAddressCoordinates.latitude}%2C-${destinationAddressCoordinates.longitude}&key=AIzaSyCGShAceyIm1LHL2mLja0eKCKDjoZV2RzY";
+      String request = "https://maps.googleapis.com/maps/api/directions/json?origin=${sourceAddressCoordinates.latitude}%2C-${sourceAddressCoordinates.longitude}&destination=${destinationAddressCoordinates.latitude}%2C-${destinationAddressCoordinates.longitude}&key=AIzaSyDAPjmcAZXfqsuO_ftMb0gNbIhDC9pcnYk";
       // PolylineResult result = PolylinePoints.
       final response = await Dio().get(request);
       if(response.statusCode == 200){
@@ -240,4 +251,5 @@ E/flutter (20139): <asynchronous suspension>*/
 //ok
 ///AIzaSyAlGfqovveJyIrEKxA4D4s1VbAgBWc5GKA place
 ///AIzaSyCGShAceyIm1LHL2mLja0eKCKDjoZV2RzY direction
+///AIzaSyDAPjmcAZXfqsuO_ftMb0gNbIhDC9pcnYk
 ///https://blog.codemagic.io/creating-a-route-calculator-using-google-maps/

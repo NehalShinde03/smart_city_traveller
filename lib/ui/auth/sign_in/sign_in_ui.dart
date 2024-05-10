@@ -146,7 +146,11 @@ class _SignInUiState extends State<SignInUi> {
                               text: "Continue",
                               borderRadius: Spacing.medium,
                               buttonColor: CommonColor.black.withOpacity(0.8),
-                              onPressed: () => signInCubit.credentialMatchLoginTime(context: context)
+                              onPressed: (){
+                                if(state.emailController.text.isNotEmpty && state.passWordController.text.isNotEmpty){
+                                  signInCubit.credentialMatchLoginTime(context: context);
+                                }
+                              }
                           ),
                         ),
 
@@ -215,7 +219,7 @@ class _SignInUiState extends State<SignInUi> {
                     color: CommonColor.black.withOpacity(0.6),
                     child: Center(
                       child: Lottie.asset(
-                          'assets/animation/loader.json',
+                          CommonAnimation.loader,
                           width: MediaQuery.of(context).size.width/3,
                           height: MediaQuery.of(context).size.height/3,
                           fit: BoxFit.fill,
@@ -229,8 +233,7 @@ class _SignInUiState extends State<SignInUi> {
                   return const SizedBox();
                 }
               }
-          )
-          
+            )
         ],
       ),
     );

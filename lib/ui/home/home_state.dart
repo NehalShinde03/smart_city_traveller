@@ -18,6 +18,7 @@ class HomeState extends Equatable {
   final Set<Marker> setMarkers;
   final String mapTopBarValue;
   final List listOfCoordinates;
+  final String differenceBetweenTime;
 
   const HomeState({
     this.userInfo = const [],
@@ -32,7 +33,8 @@ class HomeState extends Equatable {
     this.setPolyLine = const {},
     this.setMarkers = const {},
     this.mapTopBarValue = "0",
-    this.listOfCoordinates = const []
+    this.listOfCoordinates = const [],
+    this.differenceBetweenTime = ""
   });
 
   @override
@@ -49,7 +51,8 @@ class HomeState extends Equatable {
         setPolyLine,
         setMarkers,
         mapTopBarValue,
-        listOfCoordinates
+        listOfCoordinates,
+        differenceBetweenTime
       ];
 
   HomeState copyWith({
@@ -66,7 +69,8 @@ class HomeState extends Equatable {
     Set<Polyline>? setPolyLine,
     Set<Marker>? setMarkers,
     String? mapTopBarValue,
-    List? listOfCoordinates
+    List? listOfCoordinates,
+    String? differenceBetweenTime
   }) {
     return HomeState(
       userInfo: userInfo ?? this.userInfo,
@@ -81,7 +85,8 @@ class HomeState extends Equatable {
       setPolyLine: setPolyLine ?? this.setPolyLine,
       setMarkers: setMarkers ?? this.setMarkers,
       mapTopBarValue: mapTopBarValue ?? this.mapTopBarValue,
-      listOfCoordinates: listOfCoordinates ?? this.listOfCoordinates
+      listOfCoordinates: listOfCoordinates ?? this.listOfCoordinates,
+      differenceBetweenTime : differenceBetweenTime ?? this.differenceBetweenTime
     );
   }
 }

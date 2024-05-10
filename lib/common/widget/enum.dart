@@ -6,4 +6,6 @@ enum DrawerItem{
   const DrawerItem(this.value);
 }
 
-enum BottomNavigationOption { home, go, timeSlot, profile }
+enum BottomNavigationOption { home, schedulePlan, viewPlan,profile }
+
+enum PlaceCategory { All, Zoo, Park, Aquarium, ArtGallery, Museum, Temple, Restaurant }

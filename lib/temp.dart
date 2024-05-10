@@ -142,3 +142,11 @@
           ),
         ],
       );*/
+
+
+
+
+/*error :::: The following assertion was thrown during a platform message callback:
+A KeyUpEvent is dispatched, but the state shows that the physical key is not pressed. If this occurs in real application, please report this bug to Flutter. If this occurs in unit tests, please ensure that simulated events follow Flutter's event model as documented in `HardwareKeyboard`. This was the event: KeyUpEvent#a371b(physicalKey: PhysicalKeyboardKey#4a481(usbHidUsage: "0x11000000e0", debugName: "Key with ID 0x11000000e0"), logicalKey: LogicalKeyboardKey#1f52a(keyId: "0x10000060b", keyLabel: "Wake Up", debugName: "Wake Up"), character: null, timeStamp: 0:00:20.857073)
+'package:flutter/src/services/hardware_keyboard.dart':
+Failed assertion: line 509 pos 16: '_pressedKeys.containsKey(event.physicalKey)'*/

@@ -26,6 +26,9 @@ class CommonText extends StatelessWidget {
         color: textColor,
       ),
       textAlign: textAlign,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      softWrap: true,
     );
   }
 }

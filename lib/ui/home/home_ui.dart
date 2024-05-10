@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -61,7 +62,8 @@ class _HomeUiState extends State<HomeUi> with WidgetsBindingObserver {
                     top: Spacing.xSmall,
                     end: Spacing.small,
                     start: Spacing.small,
-                    bottom: Spacing.xSmall - 2),
+                    bottom: Spacing.xSmall - 2,
+                ),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height / 11,
                 child: optionWidget(state),
@@ -201,20 +203,30 @@ class _HomeUiState extends State<HomeUi> with WidgetsBindingObserver {
               )
             ],
           ));
-    } else if (state.mapTopBarValue == "2") {
+    }
+    else if (state.mapTopBarValue == "2") {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          const Padding(
-            padding: EdgeInsetsDirectional.only(
-                // start: Spacing.xxxLarge * 2,
-                end: Spacing.xLarge,
-                top: Spacing.large),
-            child: CommonText(
-              text: "Remaining Time:: 2h:44m:22s",
-              fontSize: Spacing.large,
-              textAlign: TextAlign.center,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CommonText(
+                  text: "Remaining Time\t\t\t",
+                  fontSize: Spacing.large - 1,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.bold,
+                ),
+                CommonText(
+                  text: state.differenceBetweenTime,
+                  fontSize: Spacing.large,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
             ),
           ),
           IconButton(
@@ -234,7 +246,8 @@ class _HomeUiState extends State<HomeUi> with WidgetsBindingObserver {
           ),
         ],
       );
-    } else {
+    }
+    else {
       homeCubit.fetchCurrentLocation();
       return Padding(
         padding: const EdgeInsetsDirectional.only(top: Spacing.xSmall,),

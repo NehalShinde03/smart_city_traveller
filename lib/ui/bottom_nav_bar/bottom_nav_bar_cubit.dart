@@ -18,6 +18,7 @@ class BottomNavBarCubit extends Cubit<BottomNavBarState>{
   // }
 
   void onTabChange(BottomNavigationOption value) {
+    print("value ----> $value");
     emit(state.copyWith(navigationOption:  value));
   }
 

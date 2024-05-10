@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_city_traveller/common/common_colors.dart';
 import 'package:smart_city_traveller/common/common_images.dart';
 import 'package:smart_city_traveller/common/common_spacing.dart';
 import 'package:smart_city_traveller/common/widget/common_text.dart';
 import 'package:smart_city_traveller/common/widget/common_textfield.dart';
-import 'package:smart_city_traveller/common/widget/enum.dart';
 import 'package:smart_city_traveller/ui/bottom_nav_bar/bottom_nav_bar_cubit.dart';
-import 'package:smart_city_traveller/ui/bottom_nav_bar/bottom_nav_bar_state.dart';
-import 'package:smart_city_traveller/ui/bottom_nav_bar/bottom_nav_bar_view.dart';
 import 'package:smart_city_traveller/ui/search/search_cubit.dart';
 import 'package:smart_city_traveller/ui/search/search_state.dart';
 

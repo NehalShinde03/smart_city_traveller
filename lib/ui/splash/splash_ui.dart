@@ -33,9 +33,9 @@ class _SplashUiState extends State<SplashUi> {
     Future.delayed(const Duration(seconds: 3), () async {
       final SharedPreferences preferences = await SharedPreferences.getInstance();
       ((preferences.getStringList("userInfo") ?? []).isEmpty)
+          // ? Navigator.pushNamedAndRemoveUntil(context, BottomNavBarView.routeName, (route) => false)
           ? Navigator.pushNamedAndRemoveUntil(context, SignInUi.routeName, (route) => false)
           : Navigator.pushNamedAndRemoveUntil(context, BottomNavBarView.routeName, (route) => false);
-          // : Navigator.pushNamedAndRemoveUntil(context, OnBoardingUi.routeName, (route) => false);
     });
   }
 
