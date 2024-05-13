@@ -26,6 +26,7 @@ class SchedulePlanCubit extends Cubit<SchedulePlanState>{
      );
 
      if(startTime!=null){
+       /// add second in time, the showTimePicker provide only hour and minute
        String second = DateTime.now().second.toString().padLeft(2,'0');
        List formatTime = startTime.format(context).split(' ');
        if(formatTime.length>1){
