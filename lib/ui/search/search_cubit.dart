@@ -40,7 +40,7 @@ class SearchCubit extends Cubit<SearchState>{
 
   /// search location on map|
   void searchLocation({required String searchLocation})async{
-    String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siow";
+    String kPLACE_API_KEY = "AIzaSyDQ2c_pOSOFYSjxGMwkFvCVWKjYOM9siox";
     String baseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
     String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY";
     // String request = "$baseUrl?input=$searchLocation&key=$kPLACE_API_KEY&sessiontoken=${state.sessionToken}";
