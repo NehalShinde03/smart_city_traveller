@@ -255,11 +255,6 @@ class LinearPainter extends CustomPainter{
 }
 searchCubit.clearList();
 print("destination textEditing value ====>${searchCubit.state.placeList.length}");
-searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());*/
-
-
-
-/// proglabs official
-/// AIzaSyD6bh35rjR-FvgI0FYSFX_a1Z8zMaM22zh
+searchCubit.generateSessionKey(sessionKey: searchCubit.state.uuid.v4());*
 
 //ok
